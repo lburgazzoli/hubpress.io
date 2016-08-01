@@ -4,7 +4,14 @@
     "repositoryName": "lburgazzoli.github.io",
     "branch": "master"
   },
+  "site": {
+    "title": ".: lb :."
+  },
+  "socialnetwork": {
+    "twitter": "lburgazzoli",
+    "github": "lburgazzoli"
+  },
   "theme": {
-    "name": "Casper"
+    "name": "uno-zen"
   }
 }
