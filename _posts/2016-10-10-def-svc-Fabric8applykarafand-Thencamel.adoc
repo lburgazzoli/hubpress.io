@@ -1,0 +1,2 @@
+= def µsvc = Fabric8.apply(karaf).andThen(camel)
+
