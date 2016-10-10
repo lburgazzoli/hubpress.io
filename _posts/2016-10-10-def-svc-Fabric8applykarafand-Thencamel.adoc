@@ -1,2 +1,52 @@
 = def µsvc = Fabric8.apply(karaf).andThen(camel)
 
+
+== Packaging Karaf
+
+
+[source,xml]
+.pom.xml
+----
+<plugin>
+    <groupId>org.apache.karaf.tooling</groupId>
+    <artifactId>karaf-maven-plugin</artifactId>
+    <version>${karaf.version}</version>
+    <extensions>true</extensions>
+    <executions>
+      <execution>
+        <id>karaf-assembly</id>
+        <goals>
+          <goal>assembly</goal>
+        </goals>
+        <phase>install</phase>
+      </execution>
+      <execution>
+        <id>karaf-archive</id>
+        <goals>
+          <goal>archive</goal>
+        </goals>
+        <phase>install</phase>
+      </execution>
+    </executions>
+    <configuration>
+      <useReferenceUrls>true</useReferenceUrls>
+      <archiveTarGz>true</archiveTarGz>
+      <includeBuildOutputDirectory>false</includeBuildOutputDirectory>
+      <startupFeatures>
+        <feature>karaf-framework</feature>
+        <feature>scr</feature>
+        <feature>jaas</feature>
+        <feature>aries-blueprint</feature>
+        <feature>camel-blueprint</feature>
+      </startupFeatures>
+      <startupBundles>
+        <bundle>mvn:${project.groupId}/${project.artifactId}/${project.version};start-level=80</bundle>
+      </startupBundles>
+      <libraries>
+        <library>
+          mvn:org.apache.karaf.jaas/org.apache.karaf.jaas.boot/${karaf.version};type:=boot;export:=true;delegate:=true
+        </library>
+      </libraries>
+    </configuration>
+</plugin>
+----
