@@ -83,7 +83,7 @@ data:
   data.center.name: "dc1"
 ----
 +
-You can use the notation k8s:map:mapName/dataKey to retrieve the vaue of the field data.center.name, i.e:
+You can use the notation `k8s:map:mapName/dataKey` to retrieve the vaue of the field data.center.name, i.e:
 +
 [source,xml]
 ----
@@ -107,7 +107,7 @@ data:
   bean.body: "Hello from OpenShift"
 ----
 +
-then the service with pid camel.karaf.microservice will be able to retrieve the value of the property bean.body as if the value would have been provided in etc/camel.karaf.microservice.cfg:
+then the service with pid camel.karaf.microservice will be able to retrieve the value of the property bean.body as if the value would have been provided in `etc/camel.karaf.microservice.cfg`:
 +
 [source,xml]
 ----
@@ -177,7 +177,7 @@ NOTE: Check the http://fabric8.io/guide/karaf.html[Fabric8 Karaf documentation] 
 
 === Running the example:
 
-You need a running OpenShift or Kubenretes cluster to run the example, if you do not have one I suggest to use https://github.com/kubernetes/minikube[Minikube] or https://github.com/jimmidyson/minishift[Minishift] to set up an environment in a few simple steps even http://www.davsclaus.com/2016/10/installing-kubernetes-from-copenhagen.html[while having a drink]
+You need a running OpenShift or Kubenretes cluster to run the example, if you do not have one I suggest to use https://github.com/kubernetes/minikube[Minikube] or https://github.com/jimmidyson/minishift[Minishift] to set up an environment in a few simple steps even http://www.davsclaus.com/2016/10/installing-kubernetes-from-copenhagen.html[while having a drink at the Airport]
 
 [IMPORTANT]
 ====
@@ -188,3 +188,42 @@ If you deploy on OpenShift you need to grant edit role to the service account:
 oc policy add-role-to-user view system:serviceaccount:$(oc project -q):default -n $(oc project -q) 
 ----
 ====
+
+To run the application run the following command:
+
+[source]
+----
+./mvnw clean fabric8:run
+----
+
+This command will build the application, generate OpenShift/Kubernetes resources then deploy and run the application to the cluster and finally tail the pod log so you can see what the application is doing. 
+
+After the initialization the log should looks like:
+
+....
+[INFO] F8: 2016-10-24 15:48:14,717 | INFO  | FelixStartLevel  | BlueprintCamelContext            | 36 - org.apache.camel.camel-core - 2.18.0 | Apache Camel 2.18.0 (CamelContext: camel-context) started in 0.284 seconds
+[INFO] F8: 2016-10-24 15:48:15,728 | INFO  | #0 - timer://foo | timer                            | 36 - org.apache.camel.camel-core - 2.18.0 | Body is: Hello from OpenShift, DataCenter is: dc1
+[INFO] F8: 2016-10-24 15:48:25,736 | INFO  | #0 - timer://foo | timer                            | 36 - org.apache.camel.camel-core - 2.18.0 | Body is: Hello from OpenShift, DataCenter is: dc1
+[INFO] F8: 2016-10-24 15:48:35,718 | INFO  | #0 - timer://foo | timer                            | 36 - org.apache.camel.camel-core - 2.18.0 | Body is: Hello from OpenShift, DataCenter is: dc1
+....
+
+Now if we update the ConfigMap named `camel-karaf-microservice` with a message like `Hello from Minishift` we should see the context to be restarted and the new message being displayed like below:
+
+....
+[INFO] F8: 2016-10-24 15:50:01,214 | INFO  | Thread-9         | BlueprintCamelContext            | 36 - org.apache.camel.camel-core - 2.18.0 | Apache Camel 2.18.0 (CamelContext: camel-context) is shutting down
+[INFO] F8: 2016-10-24 15:50:01,216 | INFO  | Thread-9         | DefaultShutdownStrategy          | 36 - org.apache.camel.camel-core - 2.18.0 | Starting to graceful shutdown 1 routes (timeout 300 seconds)
+[INFO] F8: 2016-10-24 15:50:01,220 | INFO  | 1 - ShutdownTask | DefaultShutdownStrategy          | 36 - org.apache.camel.camel-core - 2.18.0 | Route: timer shutdown complete, was consuming from: timer://foo?period=10s
+[INFO] F8: 2016-10-24 15:50:01,221 | INFO  | Thread-9         | DefaultShutdownStrategy          | 36 - org.apache.camel.camel-core - 2.18.0 | Graceful shutdown of 1 routes completed in 0 seconds
+[INFO] F8: 2016-10-24 15:50:01,249 | INFO  | Thread-9         | BlueprintCamelContext            | 36 - org.apache.camel.camel-core - 2.18.0 | Apache Camel 2.18.0 (CamelContext: camel-context) uptime 1 minute
+[INFO] F8: 2016-10-24 15:50:01,250 | INFO  | Thread-9         | BlueprintCamelContext            | 36 - org.apache.camel.camel-core - 2.18.0 | Apache Camel 2.18.0 (CamelContext: camel-context) is shutdown in 0.035 seconds
+[INFO] F8: 2016-10-24 15:50:01,330 | INFO  | rint Extender: 1 | BlueprintCamelContext            | 36 - org.apache.camel.camel-core - 2.18.0 | Apache Camel 2.18.0 (CamelContext: camel-context) is starting
+[INFO] F8: 2016-10-24 15:50:01,330 | INFO  | rint Extender: 1 | ManagedManagementStrategy        | 36 - org.apache.camel.camel-core - 2.18.0 | JMX is enabled
+[INFO] F8: 2016-10-24 15:50:01,364 | INFO  | rint Extender: 1 | DefaultRuntimeEndpointRegistry   | 36 - org.apache.camel.camel-core - 2.18.0 | Runtime endpoint registry is in extended mode gathering usage statistics of all incoming and outgoing endpoints (cache limit: 1000)
+[INFO] F8: 2016-10-24 15:50:01,396 | INFO  | rint Extender: 1 | BlueprintCamelContext            | 36 - org.apache.camel.camel-core - 2.18.0 | StreamCaching is not in use. If using streams then its recommended to enable stream caching. See more details at http://camel.apache.org/stream-caching.html
+[INFO] F8: 2016-10-24 15:50:01,417 | INFO  | rint Extender: 1 | BlueprintCamelContext            | 36 - org.apache.camel.camel-core - 2.18.0 | Route: timer started and consuming from: timer://foo?period=10s
+[INFO] F8: 2016-10-24 15:50:01,418 | INFO  | rint Extender: 1 | BlueprintCamelContext            | 36 - org.apache.camel.camel-core - 2.18.0 | Total 1 routes, of which 1 are started.
+[INFO] F8: 2016-10-24 15:50:01,418 | INFO  | rint Extender: 1 | BlueprintCamelContext            | 36 - org.apache.camel.camel-core - 2.18.0 | Apache Camel 2.18.0 (CamelContext: camel-context) started in 0.087 seconds
+[INFO] F8: 2016-10-24 15:50:02,419 | INFO  | #2 - timer://foo | timer                            | 36 - org.apache.camel.camel-core - 2.18.0 | Body is: Hello from Minishift, DataCenter is: dc1
+[INFO] F8: 2016-10-24 15:50:12,418 | INFO  | #2 - timer://foo | timer                            | 36 - org.apache.camel.camel-core - 2.18.0 | Body is: Hello from Minishift, DataCenter is: dc1
+[INFO] F8: 2016-10-24 15:50:22,419 | INFO  | #2 - timer://foo | timer                            | 36 - org.apache.camel.camel-core - 2.18.0 | Body is: Hello from Minishift, DataCenter is: dc1
+....
