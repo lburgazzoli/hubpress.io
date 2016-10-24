@@ -114,3 +114,51 @@ This can be done via karaf-maven-plugin:
 <4> List of bundles to start at boot
 
 === Application Logic
+
+The application logic can be implemented using OSGi Blueprint 
+
+[source,xml]
+----
+<?xml version="1.0"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.3.0"
+  xmlns:ext="http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.3.0"
+  xsi:schemaLocation="
+    http://www.osgi.org/xmlns/blueprint/v1.0.0 
+    https://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+    http://camel.apache.org/schema/blueprint 
+    http://camel.apache.org/schema/blueprint/camel-blueprint.xsd
+    http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.3.0
+    http://aries.apache.org/schemas/blueprint-ext/blueprint-ext-1.3.xsd">
+
+  <cm:property-placeholder id="placeholder-cm" persistent-id="com.github.lburgazzoli.camel.karaf.microservice" update-strategy="reload">
+    <cm:default-properties>
+    </cm:default-properties>
+  </cm:property-placeholder>
+
+  <ext:property-placeholder id="placeholder-ext" evaluator="fabric8" placeholder-prefix="$[" placeholder-suffix="]"/>
+
+  <bean id="myBean" class="com.github.lburgazzoli.camel.karaf.microservice.MyBean">
+    <argument value="$[k8s:map:camel-karaf-global/data.center.name]"/>
+    <argument value="${bean.body}"/>
+  </bean>
+
+  <camelContext id="camel-context" xmlns="http://camel.apache.org/schema/blueprint">
+    
+    <route id="timer">
+      <from uri="timer:foo?period=10s"/>
+      <setHeader headerName="DataCenter">
+          <method ref="myBean" method="dataCenter"/>
+      </setHeader>
+      <setBody>
+          <method ref="myBean" method="body"/>
+      </setBody>
+      <log message="Body is: ${body}, DataCenter is: ${header.DataCenter}"/>
+    </route>
+
+  </camelContext>
+
+</blueprint>
+----
+
