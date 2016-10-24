@@ -1,18 +1,74 @@
 = def µsvc = Fabric8.apply(karaf).andThen(camel)
+:hp-tags: microservices, fabric8, karaf, openshift, kubernetes, 
 
+https://fabric8.io[Fabric8] is an amazing microservice platform which not only provide all the building blocks needed to effectively impement microservices but also a number of high quality open-source libraries and tools that every developer could leverage to ease the integration with Kubernetes/OpenShift.
 
-== Packaging Karaf
+Some of the things fabric8 provides are:
 
+* https://github.com/fabric8io/kubernetes-client[OpenShift/Kubernetes Client]
+* https://github.com/fabric8io/spring-cloud-kubernetes[Spring Cloud Kubernetes] 
+* https://github.com/fabric8io/fabric8/tree/master/components/fabric8-karaf[Fabric8 Karaf Extensions]
+* https://maven.fabric8.io[Fabric8 Maven Plugin]
+
+As we are brave, we won't talk about doing Microservices with Spring Boot but we'll go with http://karaf.apache.org/[Apache Karaf] and http://camel.apache.org/[Apache Camel].
+
+NOTE: I'll show the relevant parts here, full code is available on https://github.com/lburgazzoli/camel-karaf-microservice[github]
+
+=== Packaging the Application
+
+In a traditional environment you often deploy bundles on a running Karaf container but that's not the way we want to deploy in a microservice environment but instead we want standalone applications so the first step is to create custom Karaf distribution pre-configured with the needed bundles.
+
+This can be done via karaf-maven-plugin:
 
 [source,xml]
-.pom.xml
 ----
+<dependencies> <!--1-->
+   <dependency>
+    <groupId>org.apache.karaf.features</groupId>
+    <artifactId>framework</artifactId>
+    <version>${version.karaf}</version>
+    <type>kar</type>
+  </dependency>
+  <dependency>
+    <groupId>org.apache.karaf.features</groupId>
+    <artifactId>framework</artifactId>
+    <classifier>features</classifier>
+    <version>${version.karaf}</version>
+    <type>xml</type>
+    <scope>compile</scope>
+  </dependency>
+  <dependency>
+    <groupId>org.apache.karaf.features</groupId>
+    <artifactId>standard</artifactId>
+    <classifier>features</classifier>
+    <version>${version.karaf}</version>
+    <type>xml</type>
+    <scope>compile</scope>
+  </dependency>
+  <dependency>
+    <groupId>org.apache.camel.karaf</groupId>
+    <artifactId>apache-camel</artifactId>
+    <version>${version.camel}</version>
+    <classifier>features</classifier>
+    <type>xml</type>
+    <scope>compile</scope>
+  </dependency>
+  <dependency>
+    <groupId>io.fabric8</groupId>
+    <artifactId>fabric8-karaf-features</artifactId>
+    <version>${version.fabric8}</version>
+    <classifier>features</classifier>
+    <type>xml</type>
+    <scope>compile</scope>
+  </dependency>
+</dependencies>
+
 <plugin>
     <groupId>org.apache.karaf.tooling</groupId>
     <artifactId>karaf-maven-plugin</artifactId>
     <version>${karaf.version}</version>
     <extensions>true</extensions>
-    <executions>
+    <executions> <!--2-->
       <execution>
         <id>karaf-assembly</id>
         <goals>
@@ -29,24 +85,32 @@
       </execution>
     </executions>
     <configuration>
-      <useReferenceUrls>true</useReferenceUrls>
+      <javase>1.8</javase>
       <archiveTarGz>true</archiveTarGz>
-      <includeBuildOutputDirectory>false</includeBuildOutputDirectory>
-      <startupFeatures>
-        <feature>karaf-framework</feature>
+      <startupFeatures> <!--3-->
+        <!-- karaf -->
+        <feature>framework</feature>
         <feature>scr</feature>
-        <feature>jaas</feature>
         <feature>aries-blueprint</feature>
+
+        <!-- fabric8 -->
+        <feature>fabric8-karaf-blueprint</feature>
+        <feature>fabric8-karaf-cm</feature>
+
+        <!-- camel -->
+        <feature>camel-core</feature>
         <feature>camel-blueprint</feature>
       </startupFeatures>
-      <startupBundles>
+      <startupBundles> <!--4-->
         <bundle>mvn:${project.groupId}/${project.artifactId}/${project.version};start-level=80</bundle>
       </startupBundles>
-      <libraries>
-        <library>
-          mvn:org.apache.karaf.jaas/org.apache.karaf.jaas.boot/${karaf.version};type:=boot;export:=true;delegate:=true
-        </library>
-      </libraries>
     </configuration>
+    ...
 </plugin>
 ----
+<1> Define features dependencies 
+<2> Map karaf-maven-plugin's karaf-assembly and archive phases to install phase, this is mandatory if you want your project to be included in the distribution.
+<3> List of features to start at boot
+<4> List of bundles to start at boot
+
+=== Application Logic
