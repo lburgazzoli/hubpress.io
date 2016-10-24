@@ -87,7 +87,7 @@ You can use the notation k8s:map:mapName/dataKey to retrieve the vaue of the fie
 +
 [source,xml]
 ----
-<bean id="myBean" class="com.github.lburgazzoli.camel.karaf.microservice.MyBean">
+<bean id="myBean" class="com.github.lburgazzoli.microservice.MyBean">
   <argument value="$[k8s:map:camel-karaf-global/data.center.name]"/>
   ...
 </bean>
@@ -111,7 +111,7 @@ then the service with pid camel.karaf.microservice will be able to retrieve the 
 +
 [source,xml]
 ----
-<bean id="myBean" class="com.github.lburgazzoli.camel.karaf.microservice.MyBean">
+<bean id="myBean" class="com.github.lburgazzoli.microservice.MyBean">
   ..
   <argument value="${bean.body}"/>
 </bean>
@@ -143,7 +143,7 @@ So let's put all togheter to implement a simple Camel route using OSGI Blueprint
 
   <ext:property-placeholder evaluator="fabric8" placeholder-prefix="$[" placeholder-suffix="]"/>
 
-  <bean id="myBean" class="com.github.lburgazzoli.camel.karaf.microservice.MyBean">
+  <bean id="myBean" class="com.github.lburgazzoli.microservice.MyBean">
     <argument value="$[k8s:map:camel-karaf-global/data.center.name]"/>
     <argument value="${bean.body}"/>
   </bean>
