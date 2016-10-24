@@ -7,7 +7,7 @@ Some of the things fabric8 provides are:
 
 * https://github.com/fabric8io/kubernetes-client[OpenShift/Kubernetes Client]
 * https://github.com/fabric8io/spring-cloud-kubernetes[Spring Cloud Kubernetes]
-* https://github.com/fabric8io/fabric8/tree/master/components/fabric8-karaf[Fabric8 Karaf Extensions]
+* https://github.com/fabric8io/fabric8/tree/master/components/fabric8-karaf[Fabric8 Karaf]
 * https://maven.fabric8.io[Fabric8 Maven Plugin]
 
 As we are brave, we won't talk about doing Microservices with Spring Boot but we'll go with http://karaf.apache.org/[Apache Karaf] and http://camel.apache.org/[Apache Camel].
@@ -71,7 +71,7 @@ This can be done via karaf-maven-plugin:
 
 We are now ready to start writing our microservice so let's have a look on how to leverage Fabric8 Karaf:
 
-1. With fabric8-karaf-blueprint installed you can access ConfigMap and Secrets using property placeholders so if you have a ConfigMap like the one below
+1. With *fabric8-karaf-blueprint* installed you can access ConfigMap and Secrets using property placeholders so if you have a ConfigMap like the one below
 +
 [source,yaml]
 ----
@@ -93,7 +93,7 @@ You can use the notation k8s:map:mapName/dataKey to retrieve the vaue of the fie
 </bean>
 ----
 
-2. With fabric8-karaf-cm installed you can feed the ConfigAdmin with values from ConfigMaps so if you have a ConfigMap as below
+2. With *fabric8-karaf-cm* installed you can feed the ConfigAdmin with values from ConfigMaps so if you have a ConfigMap as below
 +
 [source,yaml]
 ----
@@ -136,12 +136,16 @@ So let's put all togheter to implement a simple Camel route using OSGI Blueprint
     http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.3.0
     http://aries.apache.org/schemas/blueprint-ext/blueprint-ext-1.3.xsd">
 
-  <cm:property-placeholder persistent-id="camel.karaf.microservice" update-strategy="reload">
+  <cm:property-placeholder 
+      persistent-id="camel.karaf.microservice" <!--1-->
+      update-strategy="reload"> <!--2-->
     <cm:default-properties>
     </cm:default-properties>
   </cm:property-placeholder>
 
-  <ext:property-placeholder evaluator="fabric8" placeholder-prefix="$[" placeholder-suffix="]"/>
+  <ext:property-placeholder 
+    evaluator="fabric8" <!--3-->
+    placeholder-prefix="$[" placeholder-suffix="]"/>
 
   <bean id="myBean" class="com.github.lburgazzoli.microservice.MyBean">
     <argument value="$[k8s:map:camel-karaf-global/data.center.name]"/>
@@ -165,5 +169,10 @@ So let's put all togheter to implement a simple Camel route using OSGI Blueprint
 
 </blueprint>
 ----
+<1> Set the persistent-id for the Blueprint.
+<2> Configure reload strategy of the context so if a property changes in ConfigAdmin (i.e. by changing the related ConfigMap) the context will be reloaded.
+<3> Configure fabric8 PropertyEvaluator so that you can use Fabric8's functions to resolve placeholders.
 
-NOTE: Check the http://fabric8.io/guide/karaf.html[Fabric8 Karaf documentation] for details and options
+NOTE: Check the http://fabric8.io/guide/karaf.html[Fabric8 Karaf documentation] for details and options.
+
+
