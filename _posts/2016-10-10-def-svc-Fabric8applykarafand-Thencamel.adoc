@@ -20,53 +20,12 @@ This can be done via karaf-maven-plugin:
 
 [source,xml]
 ----
-<dependencies> <!--1-->
-   <dependency>
-    <groupId>org.apache.karaf.features</groupId>
-    <artifactId>framework</artifactId>
-    <version>${version.karaf}</version>
-    <type>kar</type>
-  </dependency>
-  <dependency>
-    <groupId>org.apache.karaf.features</groupId>
-    <artifactId>framework</artifactId>
-    <classifier>features</classifier>
-    <version>${version.karaf}</version>
-    <type>xml</type>
-    <scope>compile</scope>
-  </dependency>
-  <dependency
-    <groupId>org.apache.karaf.features</groupId>
-    <artifactId>standard</artifactId>
-    <classifier>features</classifier>
-    <version>${version.karaf}</version>
-    <type>xml</type>
-    <scope>compile</scope>
-  </dependency>
-  <dependency>
-    <groupId>org.apache.camel.karaf</groupId>
-    <artifactId>apache-camel</artifactId>
-    <version>${version.camel}</version>
-    <classifier>features</classifier>
-    <type>xml</type>
-    <scope>compile</scope>
-  </dependency>
-  <dependency>
-    <groupId>io.fabric8</groupId>
-    <artifactId>fabric8-karaf-features</artifactId>
-    <version>${version.fabric8}</version>
-    <classifier>features</classifier>
-    <type>xml</type>
-    <scope>compile</scope>
-  </dependency>
-</dependencies>
-
 <plugin>
     <groupId>org.apache.karaf.tooling</groupId>
     <artifactId>karaf-maven-plugin</artifactId>
     <version>${karaf.version}</version>
     <extensions>true</extensions>
-    <executions> <!--2-->
+    <executions> <!--1-->
       <execution>
         <id>karaf-assembly</id>
         <goals>
@@ -85,7 +44,7 @@ This can be done via karaf-maven-plugin:
     <configuration>
       <javase>1.8</javase>
       <archiveTarGz>true</archiveTarGz>
-      <startupFeatures> <!--3-->
+      <startupFeatures> <!--2-->
         <!-- karaf -->
         <feature>framework</feature>
         <feature>scr</feature>
@@ -99,20 +58,68 @@ This can be done via karaf-maven-plugin:
         <feature>camel-core</feature>
         <feature>camel-blueprint</feature>
       </startupFeatures>
-      <startupBundles> <!--4-->
+      <startupBundles> <!--3-->
         <bundle>mvn:${project.groupId}/${project.artifactId}/${project.version};start-level=80</bundle>
       </startupBundles>
     </configuration>
     ...
 </plugin>
 ----
-<1> Define features dependencies
-<2> Map karaf-maven-plugin's karaf-assembly and archive phases to install phase, this is mandatory if you want your project to be included in the distribution.
-<3> List of features to start at boot
-<4> List of bundles to start at boot
+<1> Map karaf-maven-plugin's karaf-assembly and archive phases to install phase, this is mandatory if you want your project to be included in the distribution.
+<2> List of features to start at boot
+<3> List of bundles to start at boot
 
-We are now ready to deploy our application but let's have a look at how the application leverages Kubernetes/OpenShift for configuration:
+We are now ready to start writing our microservice so let's have a look on how to leverage Fabric8 Karaf:
 
+1. With fabric8-karaf-blueprint installed you can access ConfigMap and Secrets using property placeholders so if you have a ConfigMap like the one below
++
+[source,yaml]
+----
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: camel-karaf-global
+data:
+  data.center.name: "dc1"
+----
++
+You can use the notation k8s:map:mapName/dataKey to retrieve the vaue of the field data.center.name, i.e:
++
+[source,xml]
+----
+<bean id="myBean" class="com.github.lburgazzoli.camel.karaf.microservice.MyBean">
+  <argument value="$[k8s:map:camel-karaf-global/data.center.name]"/>
+  ...
+</bean>
+----
+
+2. With fabric8-karaf-cm installed you can feed the ConfigAdmin with values from ConfigMaps so if you have a ConfigMap as below
++
+[source,yaml]
+----
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: camel-karaf-microservice
+  labels:
+    karaf.pid: camel.karaf.microservice
+data:
+  bean.body: "Hello from OpenShift"
+----
++
+then the service with pid camel.karaf.microservice will be able to retrieve the value of the property bean.body as if the value would have been provided in etc/camel.karaf.microservice.cfg:
++
+[source,xml]
+----
+<bean id="myBean" class="com.github.lburgazzoli.camel.karaf.microservice.MyBean">
+  ..
+  <argument value="${bean.body}"/>
+</bean>
+----
+
+3. With fabric8-karaf-cm installed you can "hot reconfigure" your application by updating a ConfigMap 
+
+So let's put all togheter to implement a simple Camel route using OSGI Blueprint: 
 
 [source,xml]
 ----
@@ -158,3 +165,5 @@ We are now ready to deploy our application but let's have a look at how the appl
 
 </blueprint>
 ----
+
+NOTE: Check the http://fabric8.io/guide/karaf.html[documentation] for detaileds
