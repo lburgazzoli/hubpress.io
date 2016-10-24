@@ -166,4 +166,4 @@ So let's put all togheter to implement a simple Camel route using OSGI Blueprint
 </blueprint>
 ----
 
-NOTE: Check the http://fabric8.io/guide/karaf.html[documentation] for detaileds
+NOTE: Check the http://fabric8.io/guide/karaf.html[Fabric8 Karaf documentation] for details and options
