@@ -14,6 +14,8 @@ As we are brave, we won't talk about doing Microservices with Spring Boot but we
 
 NOTE: I'll show the relevant parts here, full code is available on https://github.com/lburgazzoli/camel-karaf-microservice[github]
 
+=== Set-up
+
 In a traditional environment you often deploy bundles on a running Karaf container but that's not the way we want to deploy in a microservice environment. Instead we want standalone applications so the first step is to create custom Karaf distribution pre-configured with the needed bundles.
 
 This can be done via karaf-maven-plugin:
@@ -173,7 +175,7 @@ So let's put all togheter to implement a simple Camel route using OSGI Blueprint
 
 NOTE: Check the http://fabric8.io/guide/karaf.html[Fabric8 Karaf documentation] for details and options.
 
-=== Running the example:
+=== Running the example
 
 You need a running OpenShift or Kubenretes cluster to run the example, if you do not have one I suggest to use https://github.com/kubernetes/minikube[Minikube] or https://github.com/jimmidyson/minishift[Minishift] to set up an environment in a few simple steps even http://www.davsclaus.com/2016/10/installing-kubernetes-from-copenhagen.html[while having a drink at the Airport]
 
