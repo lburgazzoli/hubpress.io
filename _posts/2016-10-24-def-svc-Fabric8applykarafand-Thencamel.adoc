@@ -180,7 +180,7 @@ NOTE: Check the http://fabric8.io/guide/karaf.html[Fabric8 Karaf documentation] 
 
 You need a running OpenShift or Kubenretes cluster to run the example, if you do not have one I suggest to use https://github.com/kubernetes/minikube[Minikube] or https://github.com/jimmidyson/minishift[Minishift] to set up an environment in a few simple steps even http://www.davsclaus.com/2016/10/installing-kubernetes-from-copenhagen.html[while having a drink at the Airport]
 
-IMPORTANT: If you deploy on OpenShift you need to grant edit role to the service account `oc policy add-role-to-user view system:serviceaccount:$(oc project -q):default -n $(oc project -q)`
+IMPORTANT: If you deploy on OpenShift you need to grant view role to the service account `oc policy add-role-to-user view system:serviceaccount:$(oc project -q):default -n $(oc project -q)`
 
 To run the application run the following command:
 
