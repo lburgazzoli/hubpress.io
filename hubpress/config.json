@@ -5,7 +5,8 @@
     "branch": "master"
   },
   "site": {
-    "title": ".: lb :."
+    "title": ".: lb :.",
+    "disqus": "lburgazzoli-github-io.disqus.com"
   },
   "socialnetwork": {
     "twitter": "lburgazzoli",
