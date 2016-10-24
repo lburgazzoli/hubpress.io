@@ -71,7 +71,7 @@ This can be done via karaf-maven-plugin:
 
 We are now ready to start writing our microservice so let's have a look on how to leverage Fabric8 Karaf:
 
-* With *fabric8-karaf-blueprint* installed you can access ConfigMap and Secrets using property placeholders so if you have a ConfigMap like the one below
+. With *fabric8-karaf-blueprint* installed you can access ConfigMap and Secrets using property placeholders so if you have a ConfigMap like the one below
 +
 [source,yaml]
 ----
@@ -92,7 +92,7 @@ You can use the notation `k8s:map:mapName/dataKey` to retrieve the vaue of the f
   ...
 </bean>
 ----
-* With *fabric8-karaf-cm* installed you can feed the ConfigAdmin with values from ConfigMaps so if you have a ConfigMap as below
+. With *fabric8-karaf-cm* installed you can feed the ConfigAdmin with values from ConfigMaps so if you have a ConfigMap as below
 +
 [source,yaml]
 ----
@@ -115,7 +115,7 @@ then the service with pid camel.karaf.microservice will be able to retrieve the 
   <argument value="${bean.body}"/>
 </bean>
 ----
-* With fabric8-karaf-cm installed you can "hot reconfigure" your application by updating a ConfigMap 
+. With fabric8-karaf-cm installed you can "hot reconfigure" your application by updating a ConfigMap 
 
 So let's put all togheter to implement a simple Camel route using OSGI Blueprint: 
 
