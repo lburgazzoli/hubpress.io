@@ -3,7 +3,7 @@
 
 https://fabric8.io[Fabric8] is an amazing microservice platform which not only provide all the building blocks needed to effectively impement microservices but also a number of high quality open-source libraries and tools that every developer could leverage to ease the integration with Kubernetes/OpenShift.
 
-Some of the things fabric8 provides are:
+Some of the bits fabric8 provides are:
 
 * https://github.com/fabric8io/kubernetes-client[OpenShift/Kubernetes Client]
 * https://github.com/fabric8io/spring-cloud-kubernetes[Spring Cloud Kubernetes]
@@ -85,7 +85,7 @@ data:
   data.center.name: "dc1"
 ----
 +
-You can use the notation `k8s:map:mapName/dataKey` to retrieve the vaue of the field data.center.name, i.e:
+you can use the notation `k8s:map:mapName/dataKey` to retrieve the vaue of the field data.center.name, i.e:
 +
 [source,xml]
 ----
@@ -95,7 +95,7 @@ You can use the notation `k8s:map:mapName/dataKey` to retrieve the vaue of the f
 </bean>
 ----
 +
-* With *fabric8-karaf-cm* installed you can feed the ConfigAdmin with values from ConfigMaps so if you have a ConfigMap as below
+* With *fabric8-karaf-cm* installed you can feed ConfigAdmin with values from ConfigMaps so if you have a ConfigMap as below
 +
 [source,yaml]
 ----
