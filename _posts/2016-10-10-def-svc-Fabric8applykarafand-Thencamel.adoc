@@ -94,6 +94,7 @@ You can use the notation `k8s:map:mapName/dataKey` to retrieve the vaue of the f
   ...
 </bean>
 ----
++
 * With *fabric8-karaf-cm* installed you can feed the ConfigAdmin with values from ConfigMaps so if you have a ConfigMap as below
 +
 [source,yaml]
