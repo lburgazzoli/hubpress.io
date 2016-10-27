@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[.: lb :.]]></title><description><![CDATA[.: lb :.]]></description><link>https://lburgazzoli.github.io</link><image><url>/images/cover.jpg</url><title>.: lb :.</title><link>https://lburgazzoli.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Thu, 27 Oct 2016 11:36:47 GMT</lastBuildDate><atom:link href="https://lburgazzoli.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[from("java7:anonymousClasses").to("java8:lambda")]]></title><description><![CDATA[<div class="paragraph">
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[.: lb :.]]></title><description><![CDATA[.: lb :.]]></description><link>https://lburgazzoli.github.io</link><image><url>/images/cover.jpg</url><title>.: lb :.</title><link>https://lburgazzoli.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Thu, 27 Oct 2016 11:37:24 GMT</lastBuildDate><atom:link href="https://lburgazzoli.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[from("java7:anonymousClasses").to("java8:lambda")]]></title><description><![CDATA[<div class="paragraph">
 <p>With Camel 2.18 we have introduced a few functional APIs in RouteBuilder so you can leverage lambdas to easily build your routes.</p>
 </div>
 <div class="admonitionblock note">
@@ -118,7 +118,7 @@ We are now ready to apply the new APIs to our route and rewrite it as follow:</p
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-The new Java 8 APIs introduced in RouteBuilder helps to reduce the amount of code but also it helps to make it clear which is the target of a Predicate/Processor/Expression,  i.e. in the example above you can easily spot that the routing is based on the content of the body.
+The new Java 8 APIs introduced in RouteBuilder helps to reduce the amount of code but it also helps to make it clear which is the target of a Predicate/Processor/Expression,  i.e. in the example above you can easily spot that the routing is based on the content of the body.
 </td>
 </tr>
 </table>
