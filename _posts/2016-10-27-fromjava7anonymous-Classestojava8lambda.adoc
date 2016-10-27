@@ -90,4 +90,4 @@ from("timer:simple?period=503")
     .endChoice();
 --
 
-TIP: The new Java 8 APIs introduced in RouteBuilder helps to reduce the amount of code but also it helps to make it clear which is the target of a Predicate/Processor/Expression,  i.e. in the example above you can easily spot that the routing is based on the content of the body.
+TIP: The new Java 8 APIs introduced in RouteBuilder helps to reduce the amount of code but it also helps to make it clear which is the target of a Predicate/Processor/Expression,  i.e. in the example above you can easily spot that the routing is based on the content of the body.
