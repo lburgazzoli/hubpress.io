@@ -37,7 +37,6 @@ from("timer:simple?period=503")
     .endChoice();
 --
 
-{nbsp} +
 You can now switch to Java 8 and start using new constructs to implement EIP:
 
 * http://camel.apache.org/message-translator.html[Message Translator]
@@ -71,7 +70,6 @@ However in Camel 2.18 we can make it even easier
         .to("Received odd number")
 --
 
-{nbsp} +
 We are now ready to apply the new APIs to our route and rewrite it as follow:
 
 [source,java]
