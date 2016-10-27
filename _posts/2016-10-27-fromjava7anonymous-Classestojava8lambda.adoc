@@ -72,7 +72,7 @@ However in Camel 2.18 we can make it even easier
 --
 
 {nbsp} +
-We are now ready to apply the new APIs to out route and rewrite it as follow:
+We are now ready to apply the new APIs to our route and rewrite it as follow:
 
 [source,java]
 --
