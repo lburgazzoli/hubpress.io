@@ -57,7 +57,7 @@ A http://camel.apache.org/predicate.html[Predicate] can be easily implemented us
 +
 [source,java]
 --
-    .when(e -> (exchange.getIn().getBody(Integer.class) & 1) != 0)
+    .when(exchange -> (exchange.getIn().getBody(Integer.class) & 1) != 0)
         .to("Received odd number")
 --
 +
