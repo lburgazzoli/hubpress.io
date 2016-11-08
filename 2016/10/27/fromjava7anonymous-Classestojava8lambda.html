@@ -38,9 +38,9 @@
     <link href="//fonts.googleapis.com/" rel="dns-prefetch">
     <link href="//fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic|Open+Sans:700,400&subset=latin,latin-ext" rel="stylesheet">
 
-    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/main.min.css?v=1477640599912"/>
-    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/custom.css?v=1477640599912"/>
-    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/asciidoctor-foundation.css?v=1477640599912"/>
+    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/main.min.css?v=1478632580914"/>
+    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/custom.css?v=1478632580914"/>
+    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/asciidoctor-foundation.css?v=1478632580914"/>
 
 
 
@@ -70,7 +70,7 @@
       GHOSTIUM.enablePjax = typeof enable_pjax !== 'undefined' ? enable_pjax : true;
     </script>
 
-    <script src="//lburgazzoli.github.io/themes/ghostium/assets/js/head-scripts.min.js?v=1477640599912"></script>
+    <script src="//lburgazzoli.github.io/themes/ghostium/assets/js/head-scripts.min.js?v=1478632580914"></script>
 
     <link rel="canonical" href="https://lburgazzoli.github.io/2016/10/27/fromjava7anonymous-Classestojava8lambda.html" />
     <meta name="referrer" content="origin" />
@@ -157,7 +157,7 @@ null
             <ul class="post-meta-list">
               <li class="post-meta-item">
                 <time datetime="2016-10-27" itemprop="datePublished">
-                  a day ago
+                  13 days ago
                 </time>
               </li>
                 <li class="post-meta-item">
@@ -310,6 +310,38 @@ The new Java 8 APIs introduced in RouteBuilder helps to reduce the amount of cod
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>With the upcoming <strong>Camel 2.18.1</strong> you&#8217;ll also be able to leverage lambdas in enrich/aggregate, i.e:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>you can implement your aggregation policy/aggregation strategy as lambda:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">from("direct:aggregate")
+    .aggregate()
+        .body(Long.class, b -&gt; (b &amp; 1) == 0)
+        .strategy()
+            .body(Long.class, (o, n) -&gt; o != null ? o + n : n)
+        .completionSize(5)
+    .to("mock:odd-even");</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>you can enrich content using data from an external service and merge it with a lambda expression:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">fom("direct:start")
+    .enrichWith("direct:resource")
+        .body(String.class, (o, n) -&gt; n + o)
+    .to("mock:enriched");</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
           </div>
           <footer class="post-footer">
             <div itemprop="author" itemscope itemtype="http://schema.org/Person" class="post-author">
@@ -389,7 +421,7 @@ The new Java 8 APIs introduced in RouteBuilder helps to reduce the amount of cod
         hljs.initHighlightingOnLoad();
       </script>
 
-    <script src="//lburgazzoli.github.io/themes/ghostium/assets/js/foot-scripts.min.js?v=1477640599912"></script>
+    <script src="//lburgazzoli.github.io/themes/ghostium/assets/js/foot-scripts.min.js?v=1478632580914"></script>
 
 
   </body>
