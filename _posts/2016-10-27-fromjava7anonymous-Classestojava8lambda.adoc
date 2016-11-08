@@ -89,3 +89,29 @@ from("timer:simple?period=503")
 --
 
 TIP: The new Java 8 APIs introduced in RouteBuilder helps to reduce the amount of code but it also helps to make it clear which is the target of a Predicate/Processor/Expression,  i.e. in the example above you can easily spot that the routing is based on the content of the body.
+
+With the upcoming *Camel 2.18.1* you'll also be able to leverage lambdas in enrich/aggregate, i.e:
+
+* you can implement your aggregation policy/aggregation strategy as lambda:
++
+[source,java]
+--
+from("direct:aggregate")
+    .aggregate()
+        .body(Long.class, b -> (b & 1) == 0)
+        .strategy()
+            .body(Long.class, (o, n) -> o != null ? o + n : n)
+        .completionSize(5)
+    .to("mock:odd-even");
+--
+
+* you can enrich content using data from an external service and merge it with a lambda expression:
++
+[source,java]
+--
+fom("direct:start")
+    .enrichWith("direct:resource")
+        .body(String.class, (o, n) -> n + o)
+    .to("mock:enriched");
+--
+
