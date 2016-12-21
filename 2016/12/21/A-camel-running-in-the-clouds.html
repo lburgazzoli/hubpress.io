@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>A camel running in the clouds</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="A camel running in the clouds">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="A camel running in the clouds">
+    <meta property="og:description" content="">
+
+    <!-- <meta name="twitter:site" content="">
+
+<meta name="twitter:creator" content="">
+
+<meta name="google-site-verification" content="">
+
+<meta property="fb:admins" content="">
+ -->
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+
+    <link href="//fonts.googleapis.com/" rel="dns-prefetch">
+    <link href="//fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic|Open+Sans:700,400&subset=latin,latin-ext" rel="stylesheet">
+
+    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/main.min.css?v=1482342794210"/>
+    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/custom.css?v=1482342794210"/>
+    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/asciidoctor-foundation.css?v=1482342794210"/>
+
+
+
+
+    <script type="text/javascript">
+      var ga_ua = 'UA-XXXXX-X';
+      
+      var disqus_shortname = 'example';
+      
+      var enable_pjax = true;
+
+      // Pace Options
+      // ==============
+      window.paceOptions = {
+        catchupTime: 100,
+        minTime: 100,
+        elements: false,
+        restartOnRequestAfter: 500,
+        startOnPageLoad: false
+      }
+
+      // Ghostium Globals
+      // ==============
+      window.GHOSTIUM = {};
+      GHOSTIUM.haveGA = typeof ga_ua !== 'undefined' && ga_ua !== 'UA-XXXXX-X';
+      GHOSTIUM.haveDisqus = typeof disqus_shortname !== 'undefined' && disqus_shortname !== 'example';
+      GHOSTIUM.enablePjax = typeof enable_pjax !== 'undefined' ? enable_pjax : true;
+    </script>
+
+    <script src="//lburgazzoli.github.io/themes/ghostium/assets/js/head-scripts.min.js?v=1482342794210"></script>
+
+    <link rel="canonical" href="https://lburgazzoli.github.io/2016/12/21/A-camel-running-in-the-clouds.html" />
+    <meta name="referrer" content="origin" />
+    
+    <meta property="og:site_name" content=".: lb :." />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="A camel running in the clouds" />
+    <meta property="og:description" content="Camel supports Spring Boot since Camel 2.15 but in the latest release we have improved Camel to make it a first class citizen of Spring Boot, some notables improvements available as of Camel 2.18 are: spring boot starters spring boot auto configuration spring boot healt check In Camel" />
+    <meta property="og:url" content="https://lburgazzoli.github.io/2016/12/21/A-camel-running-in-the-clouds.html" />
+    <meta property="article:tag" content="camel" />
+    <meta property="article:tag" content=" spring-boot" />
+    <meta property="article:tag" content=" spring-cloud" />
+    <meta property="article:tag" content=" microservices" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="A camel running in the clouds" />
+    <meta name="twitter:description" content="Camel supports Spring Boot since Camel 2.15 but in the latest release we have improved Camel to make it a first class citizen of Spring Boot, some notables improvements available as of Camel 2.18 are: spring boot starters spring boot auto configuration spring boot healt check In Camel" />
+    <meta name="twitter:url" content="https://lburgazzoli.github.io/2016/12/21/A-camel-running-in-the-clouds.html" />
+    
+    <script type="application/ld+json">
+null
+    </script>
+
+    <meta name="generator" content="HubPress" />
+    <link rel="alternate" type="application/rss+xml" title=".: lb :." href="https://lburgazzoli.github.io/rss/" />
+  </head>
+  <body class="post-template tag-camel tag-spring-boot tag-spring-cloud tag-microservices">
+
+    <button data-action="open-drawer" id="drawer-button" class="drawer-button"><i class="fa fa-bars"></i></button>
+    <nav tabindex="-1" class="drawer">
+      <div class="drawer-container">
+        <!--.drawer-search(role="search")-->
+        <ul role="navigation" class="drawer-list">
+          
+          <li class="drawer-list-item">
+            <a href="https://lburgazzoli.github.io" data-pjax>
+              <i class="fa fa-home"></i>Home
+            </a>
+          </li>
+          <!-- <li class="drawer-list-item">
+            <a href="https://lburgazzoli.github.io" title=".: lb :." data-pjax>
+              <i class="fa fa-list-alt"></i>All posts
+            </a>
+          </li> -->
+          <li class="drawer-list-item">
+            <a href="https://lburgazzoli.github.io/rss/">
+              <i class="fa fa-rss"></i>Subscribe to Feed
+            </a>
+          </li>
+          <li class="drawer-list-divider"></li>
+          <li class="drawer-list-item drawer-list-title">
+            Follow me
+          </li>
+          
+          
+          <li class="drawer-list-item">
+            <a href="lburgazzoli" title="Twitter" target="_blank">
+              <i class="fa fa-twitter"></i>Twitter
+            </a>
+          </li>
+          <li class="drawer-list-item">
+            <a href="lburgazzoli" title="Github" target="_blank">
+              <i class="fa fa-github"></i>Github
+            </a>
+          </li>
+          <li class="drawer-list-item">
+            <a href="https://www.linkedin.com/in/lucaburgazzoli" title="LinkedIn" target="_blank">
+              <i class="fa fa-linkedin"></i>LinkedIn
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="drawer-overlay"></div>
+    <main id="container" role="main" class="container">
+      <div class="surface">
+        <div class="surface-container">
+          <div data-pjax-container class="content">
+            
+<section class="wrapper wrapper-post">
+  <div class="wrapper-container">
+    <article itemscope itemtype="http://schema.org/BlogPosting" role="article" class="post post tag-camel tag-spring-boot tag-spring-cloud tag-microservices">
+        <section class="post-container">
+          <header class="post-header">
+            <ul class="post-meta-list">
+              <li class="post-meta-item">
+                <time datetime="2016-12-21" itemprop="datePublished">
+                  19 hours ago
+                </time>
+              </li>
+                <li class="post-meta-item">
+                  <span class="tags"><i class="fa fa-tags"></i>
+                      <span>
+                      <a href="https://lburgazzoli.github.io/tag/camel/">camel</a>, <a href="https://lburgazzoli.github.io/tag/spring-boot/"> spring-boot</a>, <a href="https://lburgazzoli.github.io/tag/spring-cloud/"> spring-cloud</a>, <a href="https://lburgazzoli.github.io/tag/microservices/"> microservices</a></span>
+                  </span>
+                </li>
+              <li class="post-meta-item">
+                <a href="#disqus_thread" data-disqus-identifier="">Comments</a>
+              </li>
+            </ul>
+            <h1 itemprop="name headline" class="post-title"><a href="https://lburgazzoli.github.io/2016/12/21/A-camel-running-in-the-clouds.html" itemprop="url" data-pjax title="A camel running in the clouds">A camel running in the clouds</a></h1>
+            <!--h2 itemprop="about" class="post-subtitle"></h2-->
+          </header>
+          <aside class="post-side">
+            <div class="post-author">
+                <a href="http://lburgazzoli.github.io" class="post-author-avatar">
+                  <img src="https://avatars.githubusercontent.com/u/1868933?v&#x3D;3" alt="Luca Burgazzoli">
+                </a>
+              <div class="post-author-info">
+                <a href="http://lburgazzoli.github.io" class="post-author-name">
+                  Luca Burgazzoli
+                </a>
+                <p class="post-author-bio"></p>
+              </div>
+            </div>
+          </aside>
+          <div itemprop="articleBody" class="post-body">
+            <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Camel supports Spring Boot since Camel 2.15 but in the latest release we have improved Camel to make it a first class citizen of Spring Boot, some notables improvements available as of Camel 2.18 are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>spring boot starters</p>
+</li>
+<li>
+<p>spring boot auto configuration</p>
+</li>
+<li>
+<p>spring boot healt check</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In Camel 2.19 we&#8217;ll furter improve the integration between Camel and Spring Boot and it will include support for Spring Cloud.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_meet_camel_spring_cloud">Meet Camel Spring Cloud</h3>
+<div class="paragraph">
+<p>Spring Cloud <sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnote_1" title="View footnote.">1</a>]</sup> provides an implementation of some common pattern in distributed system like:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>configuration management</p>
+</li>
+<li>
+<p>service discovery</p>
+</li>
+<li>
+<p>load balancing</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The initial support for Spring Cloud in Camel leverages service discovery and load balancing to provide an implementation of the ServiceCall EIP <sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnote_2" title="View footnote.">2</a>]</sup> so that you can easilly call remote services with minimal efforts.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s build a simple load balanced ServiceCall in OpenShift</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+I&#8217;ll show the relevant parts here, full code is available on <a href="https://github.com/lburgazzoli/camel-cloud">github</a>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_bill_of_materials">Bill of materials</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Minishift <sup class="footnote">[<a id="_footnoteref_3" class="footnote" href="#_footnote_3" title="View footnote.">3</a>]</sup></p>
+</li>
+<li>
+<p>Apache Maven</p>
+</li>
+<li>
+<p>Fabri8 Maven Plugin <sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnote_4" title="View footnote.">4</a>]</sup></p>
+</li>
+<li>
+<p>Spring Boot</p>
+</li>
+<li>
+<p>Spring Cloud Commons</p>
+</li>
+<li>
+<p>Spring Cloud Netflix</p>
+</li>
+<li>
+<p>Spring Cloud Kubernetes</p>
+</li>
+<li>
+<p>Apache Camel 2.19.0-SNAPSHOT</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Spring Cloud Kubernetes is now part of Spring Cloud Incubator <sup class="footnote">[<a id="_footnoteref_5" class="footnote" href="#_footnote_5" title="View footnote.">5</a>]</sup> but we are still using the version from fabric8io <sup class="footnote">[<a id="_footnoteref_6" class="footnote" href="#_footnote_6" title="View footnote.">6</a>]</sup> to let the migration process to complete
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_set_up_a_simple_rest_web_service">Set up a simple REST Web Service</h4>
+<div class="paragraph">
+<p>Thanks to Spring Boot, writing a simple REST Web Service is really trivial:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@RestController
+public class ServiceController {
+    @RequestMapping("/hello")
+    public String hello() {
+        return "Hello from " + System.getenv("POD_NAME");
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, let&#8217;s write a OpenShift descriptor to start two replicas of the Web Service we have created:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+        -
+          env:
+          - name: SPRING_APPLICATION_NAME
+            value: camel-cloud-svc
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Thanks to the Fabric8 Maven Plugin, deploying our Web Service is a matter of a single command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ mvn fabric8:deploy
+
+...
+
+$ oc get pods
+NAME                          READY     STATUS      RESTARTS   AGE
+camel-cloud-svc-1-deploy      1/1       Running     0          27s
+camel-cloud-svc-1-ojyy6       0/1       Running     0          24s
+camel-cloud-svc-1-sbkbi       0/1       Running     0          24s
+camel-cloud-svc-s2i-2-build   0/1       Completed   0          55s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you looks at the endpoints you&#8217;ll see the internal addresses our Web Service is listening to and its name:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ oc get endpoints
+NAME              ENDPOINTS                         AGE
+camel-cloud-svc   172.17.0.3:8080,172.17.0.5:8080   2m</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_set_up_a_simple_camel_route">Set up a simple Camel Route</h4>
+<div class="paragraph">
+<p>Thanks to Spring Boot, Spring Cloud and Camel Spring Cloud writing a simple route that invokes the Web Services we have deployed above is really easy:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Configuration
+public class ConsumerConfiguration {
+    @Bean
+    public RouteBuilder routeBuilder() {
+        return new RouteBuilder() {
+            @Override
+            public void configure() throws Exception {
+                from("timer:service-call?period=1s")
+                    .serviceCall("camel-cloud-svc/hello") <i class="conum" data-value="1"></i><b>(1)</b>
+                    .convertBodyTo(String.class)
+                        .to("log:service.consumer?level=INFO&amp;showAll=tru&amp;multiline=true");
+            }
+        };
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The only thing you need to configure the Service Call EIP: the name of the service and its context path</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Thanks to the Fabric8 Maven Plugin, running our Web Service Consumer is a matter of a single command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ mvn fabric8:run
+
+...
+
+[INFO] F8: 2016-12-21 17:35:25.473  INFO 1 --- [://service-call] service.consumer : Exchange[
+[INFO] F8: , ExchangePattern: InOnly
+[INFO] F8: , BodyType: String
+[INFO] F8: , Body: Hello from camel-cloud-svc-1-sbkbi <i class="conum" data-value="1"></i><b>(1)</b>
+[INFO] F8: ]
+[INFO] F8: 2016-12-21 17:35:25.563  INFO 1 --- [://service-call] service.consumer : Exchange[
+[INFO] F8: , ExchangePattern: InOnly
+[INFO] F8: , BodyType: String
+[INFO] F8: , Body: Hello from camel-cloud-svc-1-ojyy6 <i class="conum" data-value="2"></i><b>(2)</b>
+[INFO] F8: ]</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Web Service invoked on POD camel-cloud-svc-1-sbkbi</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Web Service invoked on POD camel-cloud-svc-1-ojyy6</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_wrap_up">Wrap up</h4>
+<div class="paragraph">
+<p>What&#8217;s happen under the hood ?</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Spring Cloud Kubernetes automatically creates a DiscoveryClient which is used to lookup services by name</p>
+</li>
+<li>
+<p>Spring Cloud Commons/Netflix automatically creates a LoadBalancerClient which leverages Netflix&#8217;s Ribbon for load balancing</p>
+</li>
+<li>
+<p>Camel Spring Cloud automatically configure the SerivceCall EIP to use the LoadBalancerClient created by Spring Cloud</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+This is a work in progress so things may change in the next future.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnote_1">
+<a href="#_footnoteref_1">1</a>. <a href="http://projects.spring.io/spring-cloud/" class="bare">http://projects.spring.io/spring-cloud/</a>
+</div>
+<div class="footnote" id="_footnote_2">
+<a href="#_footnoteref_2">2</a>. <a href="http://camel.apache.org/servicecall-eip.html" class="bare">http://camel.apache.org/servicecall-eip.html</a>
+</div>
+<div class="footnote" id="_footnote_3">
+<a href="#_footnoteref_3">3</a>. <a href="https://github.com/minishift/minishift" class="bare">https://github.com/minishift/minishift</a>
+</div>
+<div class="footnote" id="_footnote_4">
+<a href="#_footnoteref_4">4</a>. <a href="https://maven.fabric8.io/" class="bare">https://maven.fabric8.io/</a>
+</div>
+<div class="footnote" id="_footnote_5">
+<a href="#_footnoteref_5">5</a>. <a href="https://github.com/spring-cloud-incubator/spring-cloud-kubernetes" class="bare">https://github.com/spring-cloud-incubator/spring-cloud-kubernetes</a>
+</div>
+<div class="footnote" id="_footnote_6">
+<a href="#_footnoteref_6">6</a>. <a href="https://github.com/fabric8io/spring-cloud-kubernetes/" class="bare">https://github.com/fabric8io/spring-cloud-kubernetes/</a>
+</div>
+</div>
+          </div>
+          <footer class="post-footer">
+            <div itemprop="author" itemscope itemtype="http://schema.org/Person" class="post-author">
+                <a href="http://lburgazzoli.github.io" class="post-author-avatar">
+                  <img itemprop="image" src="https://avatars.githubusercontent.com/u/1868933?v&#x3D;3" alt="Luca Burgazzoli">
+                </a>
+              <div class="post-author-info">
+                <h4 class="post-footer-heading">Written By</h4>
+                <a href="http://lburgazzoli.github.io" itemprop="url" class="post-author-name">
+                  <span itemprop="name">Luca Burgazzoli</span>
+                </a>
+                <p itemprop="description" class="post-author-bio"></p>
+                  <p class="post-author-location">Piacenza, Italy</p>
+                  <p class="post-author-website">
+                    <a href="http://lburgazzoli.github.io" rel="nofollow">http://lburgazzoli.github.io</a>
+                  </p>
+                <p class="post-info">
+                  <b class="post-info-title">Published on</b>
+                  <time class="post-date">December 21, 2016</time>
+                </p>
+              </div>
+            </div>
+            <div class="post-social">
+              <h4 class="post-footer-heading">Spread the word</h4>
+              <a href="#" data-action="share-twitter"><i class="fa fa-fw fa-lg fa-twitter"></i></a>
+              <a href="#" data-action="share-facebook"><i class="fa fa-fw fa-lg fa-facebook"></i></a>
+              <a href="#" data-action="share-gplus"><i class="fa fa-fw fa-lg fa-google-plus"></i></a>
+            </div>
+          </footer>
+        </section>
+      <section itemprop="comment" class="post-comments">
+        <div id="disqus_thread"></div>
+      </section>
+    </article>
+
+    <footer role="contentinfo" class="footer">
+      <p><small>Copyright &copy; <span itemprop="copyrightHolder">.: lb :.</span>. 2016. All Rights Reserved.</small></p>
+      <p><small><a href="http://ghostium.oswaldoacauan.com/" target="_blank">Ghostium Theme</a> by <a href="http://twitter.com/oswaldoacauan" target="_blank">@oswaldoacauan</a></small></p>
+      <p><small>Adapted by <a href="https://twitter.com/mgreau">Maxime Gréau</a></small></p>
+      <p><small>Published with <a href="http://hubpress.io">HubPress</a></small></p>
+    </footer>
+  </div>
+</section>
+
+
+<section class="post-comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+  var disqus_shortname = 'lburgazzoli-github-io'; // required: replace example with your forum shortname
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>
+
+
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();
+      </script>
+
+    <script src="//lburgazzoli.github.io/themes/ghostium/assets/js/foot-scripts.min.js?v=1482342794210"></script>
+
+
+  </body>
+</html>
