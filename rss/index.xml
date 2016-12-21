@@ -1,4 +1,288 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[.: lb :.]]></title><description><![CDATA[.: lb :.]]></description><link>https://lburgazzoli.github.io</link><image><url>/images/cover-2.jpg</url><title>.: lb :.</title><link>https://lburgazzoli.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Tue, 08 Nov 2016 19:16:20 GMT</lastBuildDate><atom:link href="https://lburgazzoli.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[from("java7:anonymousClasses").to("java8:lambda")]]></title><description><![CDATA[<div class="paragraph">
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[.: lb :.]]></title><description><![CDATA[.: lb :.]]></description><link>https://lburgazzoli.github.io</link><image><url>/images/cover-2.jpg</url><title>.: lb :.</title><link>https://lburgazzoli.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Wed, 21 Dec 2016 17:53:14 GMT</lastBuildDate><atom:link href="https://lburgazzoli.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[A camel running in the clouds]]></title><description><![CDATA[<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Camel supports Spring Boot since Camel 2.15 but in the latest release we have improved Camel to make it a first class citizen of Spring Boot, some notables improvements available as of Camel 2.18 are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>spring boot starters</p>
+</li>
+<li>
+<p>spring boot auto configuration</p>
+</li>
+<li>
+<p>spring boot healt check</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In Camel 2.19 we&#8217;ll furter improve the integration between Camel and Spring Boot and it will include support for Spring Cloud.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_meet_camel_spring_cloud">Meet Camel Spring Cloud</h3>
+<div class="paragraph">
+<p>Spring Cloud <sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnote_1" title="View footnote.">1</a>]</sup> provides an implementation of some common pattern in distributed system like:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>configuration management</p>
+</li>
+<li>
+<p>service discovery</p>
+</li>
+<li>
+<p>load balancing</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The initial support for Spring Cloud in Camel leverages service discovery and load balancing to provide an implementation of the ServiceCall EIP <sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnote_2" title="View footnote.">2</a>]</sup> so that you can easilly call remote services with minimal efforts.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s build a simple load balanced ServiceCall in OpenShift</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+I&#8217;ll show the relevant parts here, full code is available on <a href="https://github.com/lburgazzoli/camel-cloud">github</a>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_bill_of_materials">Bill of materials</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Minishift <sup class="footnote">[<a id="_footnoteref_3" class="footnote" href="#_footnote_3" title="View footnote.">3</a>]</sup></p>
+</li>
+<li>
+<p>Apache Maven</p>
+</li>
+<li>
+<p>Fabri8 Maven Plugin <sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnote_4" title="View footnote.">4</a>]</sup></p>
+</li>
+<li>
+<p>Spring Boot</p>
+</li>
+<li>
+<p>Spring Cloud Commons</p>
+</li>
+<li>
+<p>Spring Cloud Netflix</p>
+</li>
+<li>
+<p>Spring Cloud Kubernetes</p>
+</li>
+<li>
+<p>Apache Camel 2.19.0-SNAPSHOT</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Spring Cloud Kubernetes is now part of Spring Cloud Incubator <sup class="footnote">[<a id="_footnoteref_5" class="footnote" href="#_footnote_5" title="View footnote.">5</a>]</sup> but we are still using the version from fabric8io <sup class="footnote">[<a id="_footnoteref_6" class="footnote" href="#_footnote_6" title="View footnote.">6</a>]</sup> to let the migration process to complete
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_set_up_a_simple_rest_web_service">Set up a simple REST Web Service</h4>
+<div class="paragraph">
+<p>Thanks to Spring Boot, writing a simple REST Web Service is really trivial:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@RestController
+public class ServiceController {
+    @RequestMapping("/hello")
+    public String hello() {
+        return "Hello from " + System.getenv("POD_NAME");
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, let&#8217;s write a OpenShift descriptor to start two replicas of the Web Service we have created:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+        -
+          env:
+          - name: SPRING_APPLICATION_NAME
+            value: camel-cloud-svc
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Thanks to the Fabric8 Maven Plugin, deploying our Web Service is a matter of a single command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ mvn fabric8:deploy
+
+...
+
+$ oc get pods
+NAME                          READY     STATUS      RESTARTS   AGE
+camel-cloud-svc-1-deploy      1/1       Running     0          27s
+camel-cloud-svc-1-ojyy6       0/1       Running     0          24s
+camel-cloud-svc-1-sbkbi       0/1       Running     0          24s
+camel-cloud-svc-s2i-2-build   0/1       Completed   0          55s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you looks at the endpoints you&#8217;ll see the internal addresses our Web Service is listening to and its name:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ oc get endpoints
+NAME              ENDPOINTS                         AGE
+camel-cloud-svc   172.17.0.3:8080,172.17.0.5:8080   2m</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_set_up_a_simple_camel_route">Set up a simple Camel Route</h4>
+<div class="paragraph">
+<p>Thanks to Spring Boot, Spring Cloud and Camel Spring Cloud writing a simple route that invokes the Web Services we have deployed above is really easy:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Configuration
+public class ConsumerConfiguration {
+    @Bean
+    public RouteBuilder routeBuilder() {
+        return new RouteBuilder() {
+            @Override
+            public void configure() throws Exception {
+                from("timer:service-call?period=1s")
+                    .serviceCall("camel-cloud-svc/hello") <i class="conum" data-value="1"></i><b>(1)</b>
+                    .convertBodyTo(String.class)
+                        .to("log:service.consumer?level=INFO&amp;showAll=tru&amp;multiline=true");
+            }
+        };
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The only thing you need to configure the Service Call EIP: the name of the service and its context path</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Thanks to the Fabric8 Maven Plugin, running our Web Service Consumer is a matter of a single command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ mvn fabric8:run
+
+...
+
+[INFO] F8: 2016-12-21 17:35:25.473  INFO 1 --- [://service-call] service.consumer : Exchange[
+[INFO] F8: , ExchangePattern: InOnly
+[INFO] F8: , BodyType: String
+[INFO] F8: , Body: Hello from camel-cloud-svc-1-sbkbi <i class="conum" data-value="1"></i><b>(1)</b>
+[INFO] F8: ]
+[INFO] F8: 2016-12-21 17:35:25.563  INFO 1 --- [://service-call] service.consumer : Exchange[
+[INFO] F8: , ExchangePattern: InOnly
+[INFO] F8: , BodyType: String
+[INFO] F8: , Body: Hello from camel-cloud-svc-1-ojyy6 <i class="conum" data-value="2"></i><b>(2)</b>
+[INFO] F8: ]</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Web Service invoked on POD camel-cloud-svc-1-sbkbi</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Web Service invoked on POD camel-cloud-svc-1-ojyy6</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_wrap_up">Wrap up</h4>
+<div class="paragraph">
+<p>What&#8217;s happen under the hood ?</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Spring Cloud Kubernetes automatically creates a DiscoveryClient which is used to lookup services by name</p>
+</li>
+<li>
+<p>Spring Cloud Commons/Netflix automatically creates a LoadBalancerClient which leverages Netflix&#8217;s Ribbon for load balancing</p>
+</li>
+<li>
+<p>Camel Spring Cloud automatically configure the SerivceCall EIP to use the LoadBalancerClient created by Spring Cloud</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+This is a work in progress so things may change in the next future.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnote_1">
+<a href="#_footnoteref_1">1</a>. <a href="http://projects.spring.io/spring-cloud/" class="bare">http://projects.spring.io/spring-cloud/</a>
+</div>
+<div class="footnote" id="_footnote_2">
+<a href="#_footnoteref_2">2</a>. <a href="http://camel.apache.org/servicecall-eip.html" class="bare">http://camel.apache.org/servicecall-eip.html</a>
+</div>
+<div class="footnote" id="_footnote_3">
+<a href="#_footnoteref_3">3</a>. <a href="https://github.com/minishift/minishift" class="bare">https://github.com/minishift/minishift</a>
+</div>
+<div class="footnote" id="_footnote_4">
+<a href="#_footnoteref_4">4</a>. <a href="https://maven.fabric8.io/" class="bare">https://maven.fabric8.io/</a>
+</div>
+<div class="footnote" id="_footnote_5">
+<a href="#_footnoteref_5">5</a>. <a href="https://github.com/spring-cloud-incubator/spring-cloud-kubernetes" class="bare">https://github.com/spring-cloud-incubator/spring-cloud-kubernetes</a>
+</div>
+<div class="footnote" id="_footnote_6">
+<a href="#_footnoteref_6">6</a>. <a href="https://github.com/fabric8io/spring-cloud-kubernetes/" class="bare">https://github.com/fabric8io/spring-cloud-kubernetes/</a>
+</div>
+</div>]]></description><link>https://lburgazzoli.github.io/2016/12/21/A-camel-running-in-the-clouds.html</link><guid isPermaLink="true">https://lburgazzoli.github.io/2016/12/21/A-camel-running-in-the-clouds.html</guid><category><![CDATA[camel]]></category><category><![CDATA[ spring-boot]]></category><category><![CDATA[ spring-cloud]]></category><category><![CDATA[ microservices]]></category><dc:creator><![CDATA[Luca Burgazzoli]]></dc:creator><pubDate>Wed, 21 Dec 2016 00:00:00 GMT</pubDate></item><item><title><![CDATA[from("java7:anonymousClasses").to("java8:lambda")]]></title><description><![CDATA[<div class="paragraph">
 <p>With Camel 2.18 we have introduced a few functional APIs in RouteBuilder so you can leverage lambdas to easily build your routes.</p>
 </div>
 <div class="admonitionblock note">
