@@ -1,6 +1,9 @@
 = A camel running in the clouds
 :hp-tags: camel, spring-boot, spring-cloud, microservices
+Luca Burgazzoli
+v1.1, 2016-12-21
 
+=== Camel and Spring Boot
 Camel supports Spring Boot since Camel 2.15 but in the latest release we have improved Camel to make it a first class citizen of Spring Boot, some notables improvements available as of Camel 2.18 are:
 
 - spring boot starters
