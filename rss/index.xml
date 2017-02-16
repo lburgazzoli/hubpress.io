@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[.: lb :.]]></title><description><![CDATA[.: lb :.]]></description><link>https://lburgazzoli.github.io</link><image><url>/images/cover-2.jpg</url><title>.: lb :.</title><link>https://lburgazzoli.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Thu, 22 Dec 2016 10:46:23 GMT</lastBuildDate><atom:link href="https://lburgazzoli.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[A camel running in the clouds]]></title><description><![CDATA[<div class="sect2">
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[.: lb :.]]></title><description><![CDATA[.: lb :.]]></description><link>https://lburgazzoli.github.io</link><image><url>/images/cover-2.jpg</url><title>.: lb :.</title><link>https://lburgazzoli.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Thu, 16 Feb 2017 17:12:34 GMT</lastBuildDate><atom:link href="https://lburgazzoli.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[A camel running in the clouds]]></title><description><![CDATA[<div class="sect2">
 <h3 id="_camel_and_spring_boot">Camel and Spring Boot</h3>
 <div class="paragraph">
 <p>Camel supports Spring Boot since Camel 2.15 but in the latest release we have improved Camel to make it a first class citizen of Spring Boot, some notables improvements available as of Camel 2.18 are:</p>
@@ -405,12 +405,19 @@ The new Java 8 APIs introduced in RouteBuilder helps to reduce the amount of cod
 </table>
 </div>
 <div class="paragraph">
-<p>With the upcoming <strong>Camel 2.18.1</strong> you&#8217;ll also be able to leverage lambdas in enrich/aggregate, i.e:</p>
+<p>As Java 8 API refinement is ongoing here an updated list of EIP that have been enanced to be Java 8 friendly:</p>
 </div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">From <strong>Camel 2.18.1</strong></dt>
+<dd>
 <div class="ulist">
 <ul>
 <li>
+<p><a href="http://camel.apache.org/aggregator2.html">Aggregator</a></p>
+<div class="paragraph">
 <p>you can implement your aggregation policy/aggregation strategy as lambda:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">from("direct:aggregate")
@@ -418,13 +425,17 @@ The new Java 8 APIs introduced in RouteBuilder helps to reduce the amount of cod
         .body(Long.class, b -&gt; (b &amp; 1) == 0)
         .strategy()
             .body(Long.class, (o, n) -&gt; o != null ? o + n : n)
-        .completionSize(5)
-    .to("mock:odd-even");</code></pre>
+        .completion()
+            .body(Long.class, b -&gt; b &gt;= 10)
+    .to("mock:result");</code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>you can enrich content using data from an external service and merge it with a lambda expression:</p>
+<p><a href="http://camel.apache.org/content-enricher.html">Content Enricher</a></p>
+<div class="paragraph">
+<p>You can enrich content using data from an external service and merge it with a lambda expression:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">fom("direct:start")
@@ -435,6 +446,107 @@ The new Java 8 APIs introduced in RouteBuilder helps to reduce the amount of cod
 </div>
 </li>
 </ul>
+</div>
+</dd>
+<dt class="hdlist1">From <strong>Camel 2.19</strong></dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://camel.apache.org/dynamic-router.html">Dynamic Router</a></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">class MyRouteBuilder extends RouteBuilder {
+    @Override
+    public void configure() throws Exception {
+        from("direct:start-1")
+            .dynamicRouter()
+                .exchange(this::slip);
+    }
+
+    private String slip(Exchange exchange) {
+        String previous = ExchangeHelper.getHeaderOrProperty(
+            exchange,
+            Exchange.SLIP_ENDPOINT,
+            String.class);
+
+        if (previous == null) {
+            return "mock:a,mock:b";
+        } else if ("mock://b".equals(previous)) {
+            return "mock:c";
+        }
+
+        // no more so return null
+        return null;
+    }
+}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><a href="http://camel.apache.org/idempotent-consumer.html">Idempotent Consumer</a></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">from("direct:start")
+    .idempotentConsumer()
+        .message(m -&gt; m.getHeader("MessageId"))
+        .messageIdRepository(new MemoryIdempotentRepository())
+    .to("mock:result")</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><a href="http://camel.apache.org/loop.html">Loop</a></p>
+<div class="paragraph">
+<p>You can express the do/while end condition as lamda</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">from("direct:start")
+    .loopDoWhile()
+        .body(String.class, b -&gt; b.length() &lt;= 5)
+        .transform()
+            .body(String.class, b -&gt; b += "A")
+        .to("mock:loop")
+    .end()
+    .to("mock:result");</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><a href="http://camel.apache.org/multicast.html">Multicast</a></p>
+<div class="paragraph">
+<p>You can implement your custom onPrepare function using lambda as well as the aggregation strategy used to assemble the replies from the multicasts.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">from("direct:start")
+    .multicast()
+        .onPrepare()
+            .message(m -&gt; m.setHeader("onPrepare", true))
+        .aggregationStrategy()
+            .body(Integer.class, (o, n) -&gt; o != null ? o + n : n)
+        .to("direct:do-something-1", "direct:do-something-2")
+        .end()
+    .to("mock:result");</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><a href="http://camel.apache.org/routing-slip.html">Routing Slip</a></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">from("direct:start")
+    .routingSlip()
+        .message(m -&gt; m.getHeader("RecipientListHeader", String.class).split(","))
+    .end();</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
 </div>]]></description><link>https://lburgazzoli.github.io/2016/10/27/fromjava7anonymous-Classestojava8lambda.html</link><guid isPermaLink="true">https://lburgazzoli.github.io/2016/10/27/fromjava7anonymous-Classestojava8lambda.html</guid><category><![CDATA[camel]]></category><category><![CDATA[ java8]]></category><dc:creator><![CDATA[Luca Burgazzoli]]></dc:creator><pubDate>Thu, 27 Oct 2016 00:00:00 GMT</pubDate></item><item><title><![CDATA[def µsvc = Fabric8.apply(karaf).andThen(camel)]]></title><description><![CDATA[<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
