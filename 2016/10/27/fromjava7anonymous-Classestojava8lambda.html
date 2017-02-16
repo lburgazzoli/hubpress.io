@@ -38,9 +38,9 @@
     <link href="//fonts.googleapis.com/" rel="dns-prefetch">
     <link href="//fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic|Open+Sans:700,400&subset=latin,latin-ext" rel="stylesheet">
 
-    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/main.min.css?v=1478632580914"/>
-    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/custom.css?v=1478632580914"/>
-    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/asciidoctor-foundation.css?v=1478632580914"/>
+    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/main.min.css?v=1487265154451"/>
+    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/custom.css?v=1487265154451"/>
+    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/asciidoctor-foundation.css?v=1487265154451"/>
 
 
 
@@ -70,7 +70,7 @@
       GHOSTIUM.enablePjax = typeof enable_pjax !== 'undefined' ? enable_pjax : true;
     </script>
 
-    <script src="//lburgazzoli.github.io/themes/ghostium/assets/js/head-scripts.min.js?v=1478632580914"></script>
+    <script src="//lburgazzoli.github.io/themes/ghostium/assets/js/head-scripts.min.js?v=1487265154451"></script>
 
     <link rel="canonical" href="https://lburgazzoli.github.io/2016/10/27/fromjava7anonymous-Classestojava8lambda.html" />
     <meta name="referrer" content="origin" />
@@ -157,7 +157,7 @@ null
             <ul class="post-meta-list">
               <li class="post-meta-item">
                 <time datetime="2016-10-27" itemprop="datePublished">
-                  13 days ago
+                  4 months ago
                 </time>
               </li>
                 <li class="post-meta-item">
@@ -311,12 +311,19 @@ The new Java 8 APIs introduced in RouteBuilder helps to reduce the amount of cod
 </table>
 </div>
 <div class="paragraph">
-<p>With the upcoming <strong>Camel 2.18.1</strong> you&#8217;ll also be able to leverage lambdas in enrich/aggregate, i.e:</p>
+<p>As Java 8 API refinement is ongoing here an updated list of EIP that have been enanced to be Java 8 friendly:</p>
 </div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">From <strong>Camel 2.18.1</strong></dt>
+<dd>
 <div class="ulist">
 <ul>
 <li>
+<p><a href="http://camel.apache.org/aggregator2.html">Aggregator</a></p>
+<div class="paragraph">
 <p>you can implement your aggregation policy/aggregation strategy as lambda:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">from("direct:aggregate")
@@ -324,13 +331,17 @@ The new Java 8 APIs introduced in RouteBuilder helps to reduce the amount of cod
         .body(Long.class, b -&gt; (b &amp; 1) == 0)
         .strategy()
             .body(Long.class, (o, n) -&gt; o != null ? o + n : n)
-        .completionSize(5)
-    .to("mock:odd-even");</code></pre>
+        .completion()
+            .body(Long.class, b -&gt; b &gt;= 10)
+    .to("mock:result");</code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>you can enrich content using data from an external service and merge it with a lambda expression:</p>
+<p><a href="http://camel.apache.org/content-enricher.html">Content Enricher</a></p>
+<div class="paragraph">
+<p>You can enrich content using data from an external service and merge it with a lambda expression:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">fom("direct:start")
@@ -341,6 +352,107 @@ The new Java 8 APIs introduced in RouteBuilder helps to reduce the amount of cod
 </div>
 </li>
 </ul>
+</div>
+</dd>
+<dt class="hdlist1">From <strong>Camel 2.19</strong></dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://camel.apache.org/dynamic-router.html">Dynamic Router</a></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">class MyRouteBuilder extends RouteBuilder {
+    @Override
+    public void configure() throws Exception {
+        from("direct:start-1")
+            .dynamicRouter()
+                .exchange(this::slip);
+    }
+
+    private String slip(Exchange exchange) {
+        String previous = ExchangeHelper.getHeaderOrProperty(
+            exchange,
+            Exchange.SLIP_ENDPOINT,
+            String.class);
+
+        if (previous == null) {
+            return "mock:a,mock:b";
+        } else if ("mock://b".equals(previous)) {
+            return "mock:c";
+        }
+
+        // no more so return null
+        return null;
+    }
+}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><a href="http://camel.apache.org/idempotent-consumer.html">Idempotent Consumer</a></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">from("direct:start")
+    .idempotentConsumer()
+        .message(m -&gt; m.getHeader("MessageId"))
+        .messageIdRepository(new MemoryIdempotentRepository())
+    .to("mock:result")</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><a href="http://camel.apache.org/loop.html">Loop</a></p>
+<div class="paragraph">
+<p>You can express the do/while end condition as lamda</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">from("direct:start")
+    .loopDoWhile()
+        .body(String.class, b -&gt; b.length() &lt;= 5)
+        .transform()
+            .body(String.class, b -&gt; b += "A")
+        .to("mock:loop")
+    .end()
+    .to("mock:result");</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><a href="http://camel.apache.org/multicast.html">Multicast</a></p>
+<div class="paragraph">
+<p>You can implement your custom onPrepare function using lambda as well as the aggregation strategy used to assemble the replies from the multicasts.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">from("direct:start")
+    .multicast()
+        .onPrepare()
+            .message(m -&gt; m.setHeader("onPrepare", true))
+        .aggregationStrategy()
+            .body(Integer.class, (o, n) -&gt; o != null ? o + n : n)
+        .to("direct:do-something-1", "direct:do-something-2")
+        .end()
+    .to("mock:result");</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><a href="http://camel.apache.org/routing-slip.html">Routing Slip</a></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">from("direct:start")
+    .routingSlip()
+        .message(m -&gt; m.getHeader("RecipientListHeader", String.class).split(","))
+    .end();</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
 </div>
           </div>
           <footer class="post-footer">
@@ -378,7 +490,7 @@ The new Java 8 APIs introduced in RouteBuilder helps to reduce the amount of cod
     </article>
 
     <footer role="contentinfo" class="footer">
-      <p><small>Copyright &copy; <span itemprop="copyrightHolder">.: lb :.</span>. 2016. All Rights Reserved.</small></p>
+      <p><small>Copyright &copy; <span itemprop="copyrightHolder">.: lb :.</span>. 2017. All Rights Reserved.</small></p>
       <p><small><a href="http://ghostium.oswaldoacauan.com/" target="_blank">Ghostium Theme</a> by <a href="http://twitter.com/oswaldoacauan" target="_blank">@oswaldoacauan</a></small></p>
       <p><small>Adapted by <a href="https://twitter.com/mgreau">Maxime Gréau</a></small></p>
       <p><small>Published with <a href="http://hubpress.io">HubPress</a></small></p>
@@ -421,7 +533,7 @@ The new Java 8 APIs introduced in RouteBuilder helps to reduce the amount of cod
         hljs.initHighlightingOnLoad();
       </script>
 
-    <script src="//lburgazzoli.github.io/themes/ghostium/assets/js/foot-scripts.min.js?v=1478632580914"></script>
+    <script src="//lburgazzoli.github.io/themes/ghostium/assets/js/foot-scripts.min.js?v=1487265154451"></script>
 
 
   </body>
