@@ -1,5 +1,7 @@
 = from("java7:anonymousClasses").to("java8:lambda")
 :hp-tags: camel, java8
+Luca Burgazzoli
+v1.2, 2017-02-16
 
 With Camel 2.18 we have introduced a few functional APIs in RouteBuilder so you can leverage lambdas to easily build your routes.
 
@@ -90,9 +92,13 @@ from("timer:simple?period=503")
 
 TIP: The new Java 8 APIs introduced in RouteBuilder helps to reduce the amount of code but it also helps to make it clear which is the target of a Predicate/Processor/Expression,  i.e. in the example above you can easily spot that the routing is based on the content of the body.
 
-With the upcoming *Camel 2.18.1* you'll also be able to leverage lambdas in enrich/aggregate, i.e:
+As Java 8 API refinement is ongoing here an updated list of EIP that have been enanced to be Java 8 friendly:
 
-* you can implement your aggregation policy/aggregation strategy as lambda:
+From *Camel 2.18.1*::
++
+* http://camel.apache.org/aggregator2.html[Aggregator]
++
+you can implement your aggregation policy/aggregation strategy as lambda:
 +
 [source,java]
 --
@@ -101,11 +107,14 @@ from("direct:aggregate")
         .body(Long.class, b -> (b & 1) == 0)
         .strategy()
             .body(Long.class, (o, n) -> o != null ? o + n : n)
-        .completionSize(5)
-    .to("mock:odd-even");
+        .completion()
+            .body(Long.class, b -> b >= 10)
+    .to("mock:result");
 --
-
-* you can enrich content using data from an external service and merge it with a lambda expression:
++
+* http://camel.apache.org/content-enricher.html[Content Enricher]
++
+You can enrich content using data from an external service and merge it with a lambda expression:
 +
 [source,java]
 --
@@ -115,3 +124,88 @@ fom("direct:start")
     .to("mock:enriched");
 --
 
+From *Camel 2.19*::
++
+* http://camel.apache.org/dynamic-router.html[Dynamic Router]
++
+[source,java]
+--
+class MyRouteBuilder extends RouteBuilder {
+    @Override
+    public void configure() throws Exception {
+        from("direct:start-1")
+            .dynamicRouter()
+                .exchange(this::slip);
+    }
+
+    private String slip(Exchange exchange) {
+        String previous = ExchangeHelper.getHeaderOrProperty(
+            exchange,
+            Exchange.SLIP_ENDPOINT,
+            String.class);
+
+        if (previous == null) {
+            return "mock:a,mock:b";
+        } else if ("mock://b".equals(previous)) {
+            return "mock:c";
+        }
+
+        // no more so return null
+        return null;
+    }
+}
+--
++
+* http://camel.apache.org/idempotent-consumer.html[Idempotent Consumer]
++
+[source,java]
+--
+from("direct:start")
+    .idempotentConsumer()
+        .message(m -> m.getHeader("MessageId"))
+        .messageIdRepository(new MemoryIdempotentRepository())
+    .to("mock:result")
+--
++
+* http://camel.apache.org/loop.html[Loop]
++
+You can express the do/while end condition as lamda
++
+[source,java]
+--
+from("direct:start")
+    .loopDoWhile()
+        .body(String.class, b -> b.length() <= 5)
+        .transform()
+            .body(String.class, b -> b += "A")
+        .to("mock:loop")
+    .end()
+    .to("mock:result");
+--
++
+* http://camel.apache.org/multicast.html[Multicast]
++
+You can implement your custom onPrepare function using lambda as well as the aggregation strategy used to assemble the replies from the multicasts.
++
+[source,java]
+--
+from("direct:start")
+    .multicast()
+        .onPrepare()
+            .message(m -> m.setHeader("onPrepare", true))
+        .aggregationStrategy()
+            .body(Integer.class, (o, n) -> o != null ? o + n : n)
+        .to("direct:do-something-1", "direct:do-something-2")
+        .end()
+    .to("mock:result");
+--
++
+* http://camel.apache.org/routing-slip.html[Routing Slip]
++
+[source,java]
+--
+from("direct:start")
+    .routingSlip()
+        .message(m -> m.getHeader("RecipientListHeader", String.class).split(","))
+    .end();
+--
