@@ -17,5 +17,21 @@
   },
   "theme": {
     "name": "ghostium"
+  },
+  "urls": {
+    "site": "https://lburgazzoli.github.io",
+    "hubpress": "https://lburgazzoli.github.io",
+    "theme": "//lburgazzoli.github.io/themes/ghostium",
+    "images": "https://lburgazzoli.github.io/images"
+  },
+  "initialisationConfigComponent": {
+    "name": "initialise-configuration",
+    "computed": {},
+    "methods": {},
+    "staticRenderFns": [
+      null,
+      null,
+      null
+    ]
   }
 }
