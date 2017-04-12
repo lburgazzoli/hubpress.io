@@ -2,18 +2,30 @@
   "meta": {
     "username": "lburgazzoli",
     "repositoryName": "lburgazzoli.github.io",
-    "branch": "master"
+    "branch": "master",
+    "cname": ""
   },
   "site": {
     "title": ".: lb :.",
     "logo": "http://1.gravatar.com/avatar/e5d3ca5b0b3a623854334c995e7c8114",
     "cover": "/images/cover-2.jpg",
-    "disqus": "lburgazzoli-github-io"
+    "disqus": "lburgazzoli-github-io",
+    "description": "",
+    "delay": "",
+    "postsPerPage": "",
+    "googleAnalytics": ""
   },
   "socialnetwork": {
     "twitter": "lburgazzoli",
     "linkedin": "https://www.linkedin.com/in/lucaburgazzoli",
-    "github": "lburgazzoli"
+    "github": "lburgazzoli",
+    "email": "",
+    "facebook": "",
+    "googleplus": "",
+    "instagram": "",
+    "pinterest": "",
+    "flickr": "",
+    "stackoverflow": "http://stackoverflow.com/users/204718/luca-burgazzoli"
   },
   "theme": {
     "name": "ghostium"
