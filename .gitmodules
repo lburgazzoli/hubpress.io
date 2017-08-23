@@ -1,0 +1,3 @@
+[submodule "lburgazzoli/themes/minimal"]
+	path = lburgazzoli/themes/minimal
+	url = https://github.com/calintat/minimal.git
