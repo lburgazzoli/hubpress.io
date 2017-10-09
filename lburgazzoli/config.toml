@@ -1,8 +1,9 @@
-baseURL = "https://lburgazzoli.github.io/"
+baseURL = "https://blog.lucaburgazzoli.net"
 languageCode = "en-us"
 title = ".: lb :."
 theme = "minimal"
 disqusShortname = "lburgazzoli-github-io"
+googleAnalytics = ""
 
 [params]
     author = "Luca Burgazzoli"
