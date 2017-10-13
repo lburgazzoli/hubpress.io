@@ -6,9 +6,6 @@ v1.0, 2017-10-13
 
 In a micro-service/cloud oriented architecture it becomes increasingly important to provide a mechanism to detect unhealthy services and an idiomatic way is to provide an health endpoint footnote:[Azure https://docs.microsoft.com/en-us/azure/architecture/patterns/health-endpoint-monitoring[Health Endpoint] pattern]. **Apache Camel 2.20.0** provides an experimental support footnoteref:[officialdoc,Official camel Health Check https://github.com/apache/camel/blob/master/camel-core/src/main/docs/health-check.adoc[documentation]] to probe the state of a Camel integration through a dedicated set of APIs and endpoints.
 
-
-'''
-
 == Health Checks API
 
 The APIsfootnoteref:[officialdoc] are available in `camel-core` and belong to the package `org.apache.camel.health`, the most relevant are:
@@ -286,7 +283,6 @@ camel.health.check.service.enabled = true
 camel.health.check.service.check-interval = 10s
 ----
 
-'''
 
 [IMPORTANT]
 ====
