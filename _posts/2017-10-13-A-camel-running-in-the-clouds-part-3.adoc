@@ -283,7 +283,6 @@ camel.health.check.service.enabled = true
 camel.health.check.service.check-interval = 10s
 ----
 
-
 [IMPORTANT]
 ====
 Health Checks are an experimental feature which will be improved in the next Camel releases.
