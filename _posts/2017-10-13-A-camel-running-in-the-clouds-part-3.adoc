@@ -4,14 +4,14 @@ v1.0, 2017-10-13
 :hp-tags: camel, cloud, microservices
 :icons: font
 
-In a micro-service/cloud oriented architecture it becomes increasingly important to provide a mechanism to detect non healthy services and an idiomatic way is to provide an health endpoint footnote:[Azure https://docs.microsoft.com/en-us/azure/architecture/patterns/health-endpoint-monitoring[Health Endpoint] pattern], **Apache Camel 2.20.0** provides an experimental support footnoteref:[officialdoc,Official camel Health Check https://github.com/apache/camel/blob/master/camel-core/src/main/docs/health-check.adoc[documentation]] to probe the state of a Camel integration through a dedicated set of APIs and endpoints.
+In a micro-service/cloud oriented architecture it becomes increasingly important to provide a mechanism to detect unhealthy services and an idiomatic way is to provide an health endpoint footnote:[Azure https://docs.microsoft.com/en-us/azure/architecture/patterns/health-endpoint-monitoring[Health Endpoint] pattern], **Apache Camel 2.20.0** provides an experimental support footnoteref:[officialdoc,Official camel Health Check https://github.com/apache/camel/blob/master/camel-core/src/main/docs/health-check.adoc[documentation]] to probe the state of a Camel integration through a dedicated set of APIs and endpoints.
 
 
 '''
 
 == Health Checks API
 
-The APIsfootnoteref:[officialdoc] are available in `camel-core` and belongs to the package `org.apache.camel.health`, the most relevant are:
+The APIsfootnoteref:[officialdoc] are available in `camel-core` and belong to the package `org.apache.camel.health`, the most relevant are:
 
 - *HealthCheck*
 - *HealthCheckResponse*
@@ -69,9 +69,9 @@ TIP: thresholds can be configured per route or globally.
 
 - *ConsulHealthCheckRepository*
 +
-This repository is provided by `camel-consul` module and bridges Consul's healt checksfootnote:[Consul https://www.consul.io/intro/getting-started/checks.html[Health Checks]] as Camel Health Checks so you can mark your context as unhealthy if anything monitored through Consul is reported as unhealthy.
+This repository is provided by `camel-consul` module and bridges Consul's healt checksfootnote:[Consul https://www.consul.io/intro/getting-started/checks.html[Health Checks]] as Camel Health Checks, so you can mark your context as unhealthy if anything monitored through Consul is reported as unhealthy.
 
-For a quick example, we can provision an instance of `RoutesHealthCheckRepository` configured to mark the context as non healthy after 5 failed exchanges:
+For a quick example, we can provision an instance of `RoutesHealthCheckRepository` configured to mark the context as unhealthy after 5 failed exchanges:
 
 [source,java]
 ----
@@ -94,7 +94,7 @@ If we now run the integration and we invoke the endpoint `http://localhost:8081`
 
 In addition to the attributes mentioned above, the JMX endpoint has some operations you can invoke:
 
-- *details*, a read only operation which return information about registered checks as _TabularData_, ieach element of the table should looks like:
+- *details*, a read only operation which returns information about registered checks as _TabularData_, each element of the table should looks like:
 +
 [options="header"]
 |===
@@ -107,7 +107,7 @@ In addition to the attributes mentioned above, the JMX endpoint has some operati
 |state|
 |===
 
-- *invoke*, which invoke a check by id and return its state.
+- *invoke*, which invokes a check by id and returns its state.
 
 === Spring Boot Endpoint
 
@@ -278,7 +278,7 @@ public final class MyHealthCheck extends AbstractHealthCheck {
 
 == Health Check Service
 
-By default checks are triggered when the JMX or Spring Boot endpoint are invoked but you can enable a background service to automatically invoke the checks according to a specific interval so each endpoint invocation results in a cached result being returned (if check are not forced to execute)
+By default checks are triggered when the JMX or Spring Boot endpoint are invoked but you can enable a background service to automatically invoke the checks according to a specific interval so each endpoint invocation results in a cached result being returned (if checks are not forced to be executed)
 
 [source,properties]
 ----
