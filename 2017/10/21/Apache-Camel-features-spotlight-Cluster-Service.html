@@ -50,8 +50,8 @@
     <link href="//fonts.googleapis.com/" rel="dns-prefetch">
     <link href="//fonts.googleapis.com/css?family=Noto+Serif:400,700,400italic|Open+Sans:700,400&subset=latin,latin-ext" rel="stylesheet">
 
-    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/main.min.css?v=1532872124134">
-    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/asciidoctor-foundation.css?v=1532872124134"/>
+    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/main.min.css?v=1532872837895">
+    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/asciidoctor-foundation.css?v=1532872837895"/>
 
     <script type="text/javascript">
       var ga_ua = 'UA-XXXXX-X';
@@ -78,7 +78,7 @@
       GHOSTIUM.enablePjax = typeof enable_pjax !== 'undefined' ? enable_pjax : true;
     </script>
 
-    <script src="//lburgazzoli.github.io/themes/ghostium/assets/js/head-scripts.min.js?v=1532872124134"></script>
+    <script src="//lburgazzoli.github.io/themes/ghostium/assets/js/head-scripts.min.js?v=1532872837895"></script>
 
     <link rel="canonical" href="https://lburgazzoli.github.io/2017/10/21/Apache-Camel-features-spotlight-Cluster-Service.html" />
     <meta name="referrer" content="origin" />
@@ -86,7 +86,7 @@
     <meta property="og:site_name" content=".: lb :." />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="Apache Camel features spotlight: Cluster Service" />
-    <meta property="og:description" content="Table of Contents Concepts Service set-up Spring/Blueprint XML Spring Boot Service usage Advanced usage In Apache Camel 2.20.0 we have introduced an initial support for native clustering named Camel Cluster Service for which my colleague Nicola Ferraro has wrote a really nice post about how to use" />
+    <meta property="og:description" content="In Apache Camel 2.20.0 we have introduced an initial support for native clustering named Camel Cluster Service for which my colleague Nicola Ferraro has wrote a really nice post about how to use this feature to create singleton services on Kubernetes [1], here we are going to talk" />
     <meta property="og:url" content="https://lburgazzoli.github.io/2017/10/21/Apache-Camel-features-spotlight-Cluster-Service.html" />
     <meta property="article:published_time" content="2017-10-21T00:00:00.000Z" />
     <meta property="article:tag" content="camel" />
@@ -94,7 +94,7 @@
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Apache Camel features spotlight: Cluster Service" />
-    <meta name="twitter:description" content="Table of Contents Concepts Service set-up Spring/Blueprint XML Spring Boot Service usage Advanced usage In Apache Camel 2.20.0 we have introduced an initial support for native clustering named Camel Cluster Service for which my colleague Nicola Ferraro has wrote a really nice post about how to use" />
+    <meta name="twitter:description" content="In Apache Camel 2.20.0 we have introduced an initial support for native clustering named Camel Cluster Service for which my colleague Nicola Ferraro has wrote a really nice post about how to use this feature to create singleton services on Kubernetes [1], here we are going to talk" />
     <meta name="twitter:url" content="https://lburgazzoli.github.io/2017/10/21/Apache-Camel-features-spotlight-Cluster-Service.html" />
     
     <script type="application/ld+json">
@@ -113,7 +113,7 @@
     "url": "https://lburgazzoli.github.io/2017/10/21/Apache-Camel-features-spotlight-Cluster-Service.html",
     "datePublished": "2017-10-21T00:00:00.000Z",
     "keywords": "camel, clustering",
-    "description": "Table of Contents Concepts Service set-up Spring/Blueprint XML Spring Boot Service usage Advanced usage In Apache Camel 2.20.0 we have introduced an initial support for native clustering named Camel Cluster Service for which my colleague Nicola Ferraro has wrote a really nice post about how to use"
+    "description": "In Apache Camel 2.20.0 we have introduced an initial support for native clustering named Camel Cluster Service for which my colleague Nicola Ferraro has wrote a really nice post about how to use this feature to create singleton services on Kubernetes [1], here we are going to talk"
 }
     </script>
 
@@ -208,21 +208,7 @@
             </div>
           </aside>
           <div itemprop="articleBody" class="post-body">
-            <div id="toc" class="toc">
-<div id="toctitle">Table of Contents</div>
-<ul class="sectlevel1">
-<li><a href="#_concepts">Concepts</a></li>
-<li><a href="#_service_set_up">Service set-up</a>
-<ul class="sectlevel2">
-<li><a href="#_spring_blueprint_xml">Spring/Blueprint XML</a></li>
-<li><a href="#_spring_boot">Spring Boot</a></li>
-</ul>
-</li>
-<li><a href="#_service_usage">Service usage</a></li>
-<li><a href="#_advanced_usage">Advanced usage</a></li>
-</ul>
-</div>
-<div id="preamble">
+            <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>In Apache Camel 2.20.0 we have introduced an initial support for native clustering named <strong>Camel Cluster Service</strong> for which my colleague <a href="https://www.nicolaferraro.me"><strong>Nicola Ferraro</strong></a> has wrote a really nice post about how to use this feature to create singleton services on Kubernetes <sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnote_1" title="View footnote.">1</a>]</sup>, here we are going to talk a little bit more about how the service works.</p>
@@ -627,7 +613,7 @@ from("timer:zk")
         // hljs.initHighlightingOnLoad();
       </script>
 
-    <script src="//lburgazzoli.github.io/themes/ghostium/assets/js/foot-scripts.min.js?v=1532872124134"></script>
+    <script src="//lburgazzoli.github.io/themes/ghostium/assets/js/foot-scripts.min.js?v=1532872837895"></script>
 
   </body>
 </html>

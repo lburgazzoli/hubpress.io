@@ -1,18 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[.: lb :.]]></title><description><![CDATA[.: lb :.]]></description><link>https://lburgazzoli.github.io</link><image><url>/images/cover-2.jpg</url><title>.: lb :.</title><link>https://lburgazzoli.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Sun, 29 Jul 2018 13:48:44 GMT</lastBuildDate><atom:link href="https://lburgazzoli.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Apache Camel features spotlight: Cluster Service]]></title><description><![CDATA[<div id="toc" class="toc">
-<div id="toctitle">Table of Contents</div>
-<ul class="sectlevel1">
-<li><a href="#_concepts">Concepts</a></li>
-<li><a href="#_service_set_up">Service set-up</a>
-<ul class="sectlevel2">
-<li><a href="#_spring_blueprint_xml">Spring/Blueprint XML</a></li>
-<li><a href="#_spring_boot">Spring Boot</a></li>
-</ul>
-</li>
-<li><a href="#_service_usage">Service usage</a></li>
-<li><a href="#_advanced_usage">Advanced usage</a></li>
-</ul>
-</div>
-<div id="preamble">
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[.: lb :.]]></title><description><![CDATA[.: lb :.]]></description><link>https://lburgazzoli.github.io</link><image><url>/images/cover-2.jpg</url><title>.: lb :.</title><link>https://lburgazzoli.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Sun, 29 Jul 2018 14:00:37 GMT</lastBuildDate><atom:link href="https://lburgazzoli.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Apache Camel features spotlight: Cluster Service]]></title><description><![CDATA[<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>In Apache Camel 2.20.0 we have introduced an initial support for native clustering named <strong>Camel Cluster Service</strong> for which my colleague <a href="https://www.nicolaferraro.me"><strong>Nicola Ferraro</strong></a> has wrote a really nice post about how to use this feature to create singleton services on Kubernetes <sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnote_1" title="View footnote.">1</a>]</sup>, here we are going to talk a little bit more about how the service works.</p>
