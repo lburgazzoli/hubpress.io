@@ -1,4 +1,149 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[.: lb :.]]></title><description><![CDATA[.: lb :.]]></description><link>https://lburgazzoli.github.io</link><image><url>/images/cover-2.jpg</url><title>.: lb :.</title><link>https://lburgazzoli.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Sun, 29 Jul 2018 14:00:37 GMT</lastBuildDate><atom:link href="https://lburgazzoli.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Apache Camel features spotlight: Cluster Service]]></title><description><![CDATA[<div id="preamble">
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[.: lb :.]]></title><description><![CDATA[.: lb :.]]></description><link>https://lburgazzoli.github.io</link><image><url>/images/cover-2.jpg</url><title>.: lb :.</title><link>https://lburgazzoli.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Sun, 29 Jul 2018 15:16:12 GMT</lastBuildDate><atom:link href="https://lburgazzoli.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Polyglot Camel Routes]]></title><description><![CDATA[<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>As I do not like XML so much, I spent some time on a very small project to load routes written in JavaScript or Groovy.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_background">Background</h3>
+<div class="paragraph">
+<p>When camel runs on top of Spring Boot, it automatically loads routes bounded to spring&#8217;s application context as well as xml routes placed in a configurable location so as example, if you add a property like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">camel.springboot.xml-routes = classpath:routes/*.xml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Camel will scan the classpath for resources matching <em>routes/*.xml</em> so can we use a similar approach to load routes written in different languages?</p>
+</div>
+<div class="paragraph">
+<p>Of course yes.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_javascript">JavaScript</h3>
+<div class="paragraph">
+<p>Java comes with the ScriptEngine so we can use it to invoke a js script that we can use to set up routes. The first attemp was something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">new RouteBuilder() {
+    public void configure() throws Exception {
+        ScriptEngineManager manager = ScriptEngineManager();
+        ScriptEngine engine = manager.getEngineByName("nashorn");
+
+        // bind the builder to the script engine
+        engine.put("builder", this);
+
+        // evaluate the script
+        engine.eval(...);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This let us to write a js script such as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js">builder.from('timer:js?period=1s')
+    .to('log:js?showAll=false&amp;multiline=false')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Yeah it does work but I do not like having to reference a <em>builder</em> directly so I came across this <a href="https://stackoverflow.com/questions/31236550/defining-a-default-global-java-object-to-nashorn-script-engine">SO question</a> and I re-wrote my code as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">new RouteBuilder() {
+    public void configure() throws Exception {
+        ScriptEngineManager manager = new ScriptEngineManager();
+        ScriptEngine engine = manager.getEngineByName("nashorn");
+
+        // get JavaScript "global" object
+        Object global = engine.eval("this");
+        // get JS "Object" constructor object
+        Object jsObject = engine.eval("Object");
+
+        Invocable invocable = (Invocable) engine;
+
+        // "bind" properties of this to JS global object
+        invocable.invokeMethod(jsObject, "bindProperties", global, this);
+
+        // evaluate the script
+        engine.eval(...);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which lets to avoid to reference the <em>builder</em> object so we can write our route as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js">from('timer:js?period=1s')
+    .to('log:js?showAll=false&amp;multiline=false')</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_groovy">Groovy</h3>
+<div class="paragraph">
+<p>For groovy I decide not to use the ScriptEngine as Groovy as I did not found any easy way to implement a solution similar to the JavaScript one so I decide Groovy&#8217;s native embedding facility:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">new RouteBuilder() {
+    public void configure() throws Exception {
+        CompilerConfiguration cc = new CompilerConfiguration();
+        cc.setScriptBaseClass(DelegatingScript.class.getName());
+
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        GroovyShell sh = new GroovyShell(cl, new Binding(), cc);
+
+        DelegatingScript script = (DelegatingScript) sh.parse(...)
+        script.setDelegate(this);
+        script.run();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>So we can write routes as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">from('timer:groovy?period=1s')
+    .process { it.in.body = UUID.randomUUID().toString() }
+    .to('log:groovy?showAll=false&amp;multiline=false')</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_conclusion">Conclusion</h3>
+<div class="paragraph">
+<p>This is a Sunday project so I&#8217;m sure there are quite a lot of small details that need some more attention but if you want to experiment with scripting languages instead of XML to define your routes, you can find a small spring boot auto configurer <a href="https://github.com/lburgazzoli/camel-routes-loader">on my GitHub page</a>.</p>
+</div>
+<div class="paragraph">
+<p>To configure the behavior of the auto configurer you can do something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">camel:
+  springboot:
+    # your camel conf here
+  routes:
+    loader:
+      enabled: true
+      locations:
+        # list of paths and pattern to scan
+        # for routes
+        - classpath:ext/camel/*.js
+        - classpath:ext/camel/*.groovy</code></pre>
+</div>
+</div>
+</div>]]></description><link>https://lburgazzoli.github.io/2018/07/29/Polyglot-Camel-Routes.html</link><guid isPermaLink="true">https://lburgazzoli.github.io/2018/07/29/Polyglot-Camel-Routes.html</guid><category><![CDATA[camel]]></category><category><![CDATA[clustering]]></category><dc:creator><![CDATA[Luca Burgazzoli]]></dc:creator><pubDate>Sun, 29 Jul 2018 00:00:00 GMT</pubDate></item><item><title><![CDATA[Apache Camel features spotlight: Cluster Service]]></title><description><![CDATA[<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>In Apache Camel 2.20.0 we have introduced an initial support for native clustering named <strong>Camel Cluster Service</strong> for which my colleague <a href="https://www.nicolaferraro.me"><strong>Nicola Ferraro</strong></a> has wrote a really nice post about how to use this feature to create singleton services on Kubernetes <sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnote_1" title="View footnote.">1</a>]</sup>, here we are going to talk a little bit more about how the service works.</p>

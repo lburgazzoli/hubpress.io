@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>Polyglot Camel Routes</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Polyglot Camel Routes">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:url" content="https://lburgazzoli.github.io">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Polyglot Camel Routes">
+    <meta property="og:description" content="">
+    <meta property="og:site_name" content=".: lb :.">
+
+    <meta itemprop="name" content="Polyglot Camel Routes">
+    <meta itemprop="description" content="">
+
+    <meta name="twitter:site" content="@yourblogtwitter">
+    
+    <meta name="twitter:creator" content="@yourtwitter">
+    
+    <meta property="article:author" content="https://www.facebook.com/yourprofile">
+    
+    <meta property="article:publisher" content="https://www.facebook.com/yourblogprofile">
+    
+    <meta property="fb:admins" content="">
+    
+    <meta name="google-site-verification" content="">
+    
+    <link rel="author" href="https://plus.google.com/yourprofile">
+    
+    <meta name="theme-color" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+
+    <link href="//fonts.googleapis.com/" rel="dns-prefetch">
+    <link href="//fonts.googleapis.com/css?family=Noto+Serif:400,700,400italic|Open+Sans:700,400&subset=latin,latin-ext" rel="stylesheet">
+
+    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/main.min.css?v=1532877372573">
+    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/asciidoctor-foundation.css?v=1532877372573"/>
+
+    <script type="text/javascript">
+      var ga_ua = 'UA-XXXXX-X';
+      
+      var disqus_shortname = 'example';
+      
+      var enable_pjax = true;
+
+      // Pace Options
+      // ==============
+      window.paceOptions = {
+        catchupTime: 100,
+        minTime: 100,
+        elements: false,
+        restartOnRequestAfter: 500,
+        startOnPageLoad: false
+      }
+
+      // Ghostium Globals
+      // ==============
+      window.GHOSTIUM = {};
+      GHOSTIUM.haveGA = typeof ga_ua !== 'undefined' && ga_ua !== 'UA-XXXXX-X';
+      GHOSTIUM.haveDisqus = typeof disqus_shortname !== 'undefined' && disqus_shortname !== 'example';
+      GHOSTIUM.enablePjax = typeof enable_pjax !== 'undefined' ? enable_pjax : true;
+    </script>
+
+    <script src="//lburgazzoli.github.io/themes/ghostium/assets/js/head-scripts.min.js?v=1532877372573"></script>
+
+    <link rel="canonical" href="https://lburgazzoli.github.io/2018/07/29/Polyglot-Camel-Routes.html" />
+    <meta name="referrer" content="origin" />
+    
+    <meta property="og:site_name" content=".: lb :." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Polyglot Camel Routes" />
+    <meta property="og:description" content="As I do not like XML so much, I spent some time on a very small project to load routes written in JavaScript or Groovy. Background When camel runs on top of Spring Boot, it automatically loads routes bounded to spring&amp;#8217;s application context as well as xml routes" />
+    <meta property="og:url" content="https://lburgazzoli.github.io/2018/07/29/Polyglot-Camel-Routes.html" />
+    <meta property="article:published_time" content="2018-07-29T00:00:00.000Z" />
+    <meta property="article:tag" content="camel" />
+    <meta property="article:tag" content="clustering" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Polyglot Camel Routes" />
+    <meta name="twitter:description" content="As I do not like XML so much, I spent some time on a very small project to load routes written in JavaScript or Groovy. Background When camel runs on top of Spring Boot, it automatically loads routes bounded to spring&amp;#8217;s application context as well as xml routes" />
+    <meta name="twitter:url" content="https://lburgazzoli.github.io/2018/07/29/Polyglot-Camel-Routes.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": ".: lb :.",
+    "author": {
+        "@type": "Person",
+        "name": "Luca Burgazzoli",
+        "image": "https://avatars1.githubusercontent.com/u/1868933?v=4",
+        "url": "https://lburgazzoli.github.io/author/lburgazzoli/",
+        "sameAs": "http://lburgazzoli.github.io"
+    },
+    "headline": "Polyglot Camel Routes",
+    "url": "https://lburgazzoli.github.io/2018/07/29/Polyglot-Camel-Routes.html",
+    "datePublished": "2018-07-29T00:00:00.000Z",
+    "keywords": "camel, clustering",
+    "description": "As I do not like XML so much, I spent some time on a very small project to load routes written in JavaScript or Groovy. Background When camel runs on top of Spring Boot, it automatically loads routes bounded to spring&amp;#8217;s application context as well as xml routes"
+}
+    </script>
+
+    <meta name="generator" content="HubPress" />
+    <link rel="alternate" type="application/rss+xml" title=".: lb :." href="https://lburgazzoli.github.io/rss/" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prism/1.14.0/themes/prism-okaidia.min.css">
+    
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+  </head>
+  <body class="post-template tag-camel tag-clustering">
+
+    <button data-action="open-drawer" id="drawer-button" class="drawer-button"><i class="fa fa-bars"></i></button>
+    <nav tabindex="-1" class="drawer">
+      <div class="drawer-container">
+        <!--.drawer-search(role="search")-->
+        <ul role="navigation" class="drawer-list">
+          
+          <li class="drawer-list-item">
+            <a href="/" data-pjax>
+              <i class="fa fa-home"></i>Home
+            </a>
+          </li>
+          <li class="drawer-list-item">
+            <a href="https://lburgazzoli.github.io/rss/">
+              <i class="fa fa-rss"></i>Subscribe to Feed
+            </a>
+          </li>
+          <li class="drawer-list-divider"></li>
+          <li class="drawer-list-item drawer-list-title">
+            Follow me
+          </li>
+          
+          
+          <li class="drawer-list-item">
+            <a href="lburgazzoli" title="Twitter" target="_blank">
+              <i class="fa fa-twitter"></i>Twitter
+            </a>
+          </li>
+          <li class="drawer-list-item">
+            <a href="lburgazzoli" title="Github" target="_blank">
+              <i class="fa fa-github"></i>Github
+            </a>
+          </li>
+          <li class="drawer-list-item">
+            <a href="https://www.linkedin.com/in/lucaburgazzoli" title="LinkedIn" target="_blank">
+              <i class="fa fa-linkedin"></i>LinkedIn
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="drawer-overlay"></div>
+    <main id="container" role="main" class="container">
+      <div class="surface">
+        <div class="surface-container">
+          <div data-pjax-container class="content">
+            
+<section class="wrapper wrapper-post">
+  <div class="wrapper-container">
+    <article itemscope itemtype="http://schema.org/BlogPosting" role="article" class="post post tag-camel tag-clustering">
+        <section class="post-container">
+          <header class="post-header">
+            <ul class="post-meta-list">
+              <li class="post-meta-item">
+                <time datetime="2018-07-29" itemprop="datePublished">
+                  17 hours ago
+                </time>
+              </li>
+                <li class="post-meta-item">
+                    <a itemprop="articleSection" href="/" data-pjax>camel</a>, 
+                    <a itemprop="keywords" href="/" data-pjax>clustering</a> 
+                </li>
+              <li class="post-meta-item">
+                <a href="#disqus_thread" data-disqus-identifier="">Comments</a>
+              </li>
+            </ul>
+            <h1 itemprop="name headline" class="post-title"><a href="https://lburgazzoli.github.io/2018/07/29/Polyglot-Camel-Routes.html" itemprop="url" data-pjax title="Polyglot Camel Routes">Polyglot Camel Routes</a></h1>
+            <!--h2 itemprop="about" class="post-subtitle"></h2-->
+          </header>
+          <aside class="post-side">
+            <div class="post-author">
+                <a href="http://lburgazzoli.github.io" class="post-author-avatar">
+                  <img src="https://avatars1.githubusercontent.com/u/1868933?v&#x3D;4" alt="Luca Burgazzoli">
+                </a>
+              <div class="post-author-info">
+                <a href="http://lburgazzoli.github.io" class="post-author-name">
+                  Luca Burgazzoli
+                </a>
+                <p class="post-author-bio"></p>
+              </div>
+            </div>
+          </aside>
+          <div itemprop="articleBody" class="post-body">
+            <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>As I do not like XML so much, I spent some time on a very small project to load routes written in JavaScript or Groovy.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_background">Background</h3>
+<div class="paragraph">
+<p>When camel runs on top of Spring Boot, it automatically loads routes bounded to spring&#8217;s application context as well as xml routes placed in a configurable location so as example, if you add a property like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">camel.springboot.xml-routes = classpath:routes/*.xml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Camel will scan the classpath for resources matching <em>routes/*.xml</em> so can we use a similar approach to load routes written in different languages?</p>
+</div>
+<div class="paragraph">
+<p>Of course yes.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_javascript">JavaScript</h3>
+<div class="paragraph">
+<p>Java comes with the ScriptEngine so we can use it to invoke a js script that we can use to set up routes. The first attemp was something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">new RouteBuilder() {
+    public void configure() throws Exception {
+        ScriptEngineManager manager = ScriptEngineManager();
+        ScriptEngine engine = manager.getEngineByName("nashorn");
+
+        // bind the builder to the script engine
+        engine.put("builder", this);
+
+        // evaluate the script
+        engine.eval(...);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This let us to write a js script such as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js">builder.from('timer:js?period=1s')
+    .to('log:js?showAll=false&amp;multiline=false')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Yeah it does work but I do not like having to reference a <em>builder</em> directly so I came across this <a href="https://stackoverflow.com/questions/31236550/defining-a-default-global-java-object-to-nashorn-script-engine">SO question</a> and I re-wrote my code as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">new RouteBuilder() {
+    public void configure() throws Exception {
+        ScriptEngineManager manager = new ScriptEngineManager();
+        ScriptEngine engine = manager.getEngineByName("nashorn");
+
+        // get JavaScript "global" object
+        Object global = engine.eval("this");
+        // get JS "Object" constructor object
+        Object jsObject = engine.eval("Object");
+
+        Invocable invocable = (Invocable) engine;
+
+        // "bind" properties of this to JS global object
+        invocable.invokeMethod(jsObject, "bindProperties", global, this);
+
+        // evaluate the script
+        engine.eval(...);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which lets to avoid to reference the <em>builder</em> object so we can write our route as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js">from('timer:js?period=1s')
+    .to('log:js?showAll=false&amp;multiline=false')</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_groovy">Groovy</h3>
+<div class="paragraph">
+<p>For groovy I decide not to use the ScriptEngine as Groovy as I did not found any easy way to implement a solution similar to the JavaScript one so I decide Groovy&#8217;s native embedding facility:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">new RouteBuilder() {
+    public void configure() throws Exception {
+        CompilerConfiguration cc = new CompilerConfiguration();
+        cc.setScriptBaseClass(DelegatingScript.class.getName());
+
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        GroovyShell sh = new GroovyShell(cl, new Binding(), cc);
+
+        DelegatingScript script = (DelegatingScript) sh.parse(...)
+        script.setDelegate(this);
+        script.run();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>So we can write routes as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">from('timer:groovy?period=1s')
+    .process { it.in.body = UUID.randomUUID().toString() }
+    .to('log:groovy?showAll=false&amp;multiline=false')</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_conclusion">Conclusion</h3>
+<div class="paragraph">
+<p>This is a Sunday project so I&#8217;m sure there are quite a lot of small details that need some more attention but if you want to experiment with scripting languages instead of XML to define your routes, you can find a small spring boot auto configurer <a href="https://github.com/lburgazzoli/camel-routes-loader">on my GitHub page</a>.</p>
+</div>
+<div class="paragraph">
+<p>To configure the behavior of the auto configurer you can do something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">camel:
+  springboot:
+    # your camel conf here
+  routes:
+    loader:
+      enabled: true
+      locations:
+        # list of paths and pattern to scan
+        # for routes
+        - classpath:ext/camel/*.js
+        - classpath:ext/camel/*.groovy</code></pre>
+</div>
+</div>
+</div>
+          </div>
+          <footer class="post-footer">
+            <div itemprop="author" itemscope itemtype="http://schema.org/Person" class="post-author">
+                <a href="http://lburgazzoli.github.io" class="post-author-avatar">
+                  <img itemprop="image" src="https://avatars1.githubusercontent.com/u/1868933?v&#x3D;4" alt="Luca Burgazzoli">
+                </a>
+              <div class="post-author-info">
+                <h4 class="post-footer-heading">Written By</h4>
+                <a href="http://lburgazzoli.github.io" itemprop="url" class="post-author-name">
+                  <span itemprop="name">Luca Burgazzoli</span>
+                </a>
+                <p itemprop="description" class="post-author-bio"></p>
+                  <p class="post-author-location">Piacenza, Italy</p>
+                  <p class="post-author-website">
+                    <a href="http://lburgazzoli.github.io" rel="nofollow">http://lburgazzoli.github.io</a>
+                  </p>
+                <p class="post-info">
+                  <b class="post-info-title">Published on</b>
+                  <time class="post-date">July 29, 2018</time>
+                </p>
+              </div>
+            </div>
+            <div class="post-social">
+              <h4 class="post-footer-heading">Spread the word</h4>
+              <a href="#" data-action="share-twitter"><i class="fa fa-fw fa-lg fa-twitter"></i></a>
+              <a href="#" data-action="share-facebook"><i class="fa fa-fw fa-lg fa-facebook"></i></a>
+              <a href="#" data-action="share-gplus"><i class="fa fa-fw fa-lg fa-google-plus"></i></a>
+            </div>
+          </footer>
+        </section>
+
+      <section class="post-comments">
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+        var disqus_shortname = 'lburgazzoli-github-io'; // required: replace example with your forum shortname
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </section>
+
+    </article>
+
+    <footer role="contentinfo" class="footer">
+      <p><small>© 2018. All Rights Reserved.</small></p>
+      <p><small><a href="http://ghostium.oswaldoacauan.com/" target="_blank">Ghostium Theme</a> by <a href="http://twitter.com/oswaldoacauan" target="_blank">@oswaldoacauan</a></small></p>
+      <p><small>Proudly published with <a href="https://hubpress.github.io" target="_blank">HubPress</a></small></p>
+    </footer>
+  </div>
+</section>
+
+
+          </div>
+        </div>
+      </div>
+    </main>
+
+
+    <script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous">
+    </script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/prism/1.14.0/prism.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        // hljs.initHighlightingOnLoad();
+      </script>
+
+    <script src="//lburgazzoli.github.io/themes/ghostium/assets/js/foot-scripts.min.js?v=1532877372573"></script>
+
+  </body>
+</html>
