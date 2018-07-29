@@ -3,7 +3,6 @@ Luca Burgazzoli
 v1.0, 2017-10-21
 :hp-tags: camel, clustering
 :icons: font
-:toc:
 
 In Apache Camel 2.20.0 we have introduced an initial support for native clustering named *Camel Cluster Service* for which my colleague https://www.nicolaferraro.me[*Nicola Ferraro*] has wrote a really nice post about how to use this feature to create singleton services on Kubernetes footnote:[ https://www.nicolaferraro.me/2017/10/17/creating-clustered-singleton-services-on-kubernetes/[Creating Clustered Singleton Services on Kubernetes]], here we are going to talk a little bit more about how the service works.
 
