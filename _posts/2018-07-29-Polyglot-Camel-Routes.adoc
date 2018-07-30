@@ -1,6 +1,6 @@
 = Polyglot Camel Routes
 Luca Burgazzoli
-v1.0, 2018-07-29
+v1.1, 2018-07-30
 :hp-tags: camel
 :icons: font
 
@@ -130,6 +130,50 @@ camel:
         - classpath:ext/camel/*.js
         - classpath:ext/camel/*.groovy
 ----
+
+=== Updates (2018-07-30)
+
+I've updated the example to include a binding for JavaScript using GraalJS. As there's no equivalent for nashorn's ```bindProperties``` extension, a little hack is required:
+
+[source,java]
+----
+ return new RouteBuilder() {
+    public void configure() throws Exception {
+        try(Context context = Context.create()) {
+
+            // add this builder instance to javascript language
+            // bindings
+            context.getBindings("js").putMember("builder", this);
+
+            // move builder's methods to global scope so builder's
+            // dsl can be invoke directly
+            context.eval(
+                "js",
+                "m = Object.keys(builder)\n" +
+                    "m.forEach((element) => {\n" +
+                    "    global[element] = builder[element]\n" +
+                    "});"
+            );
+
+            // remove bindings
+            context.getBindings("js").removeMember("builder");
+            
+            try (InputStream is = source.getInputStream()) {
+                context.eval(
+                    Source.newBuilder("js", new InputStreamReader(is), "").build()
+                );
+            }
+        }
+    }
+};
+----
+
+[NOTE]
+====
+To user GraalJS it is required to run the project using GraalVM
+====
+
+
 
 
 
