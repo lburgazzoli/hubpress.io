@@ -1,7 +1,7 @@
 = Polyglot Camel Routes
 Luca Burgazzoli
 v1.0, 2018-07-29
-:hp-tags: camel, clustering
+:hp-tags: camel
 :icons: font
 
 As I do not like XML so much, I spent some time on a very small project to load routes written in JavaScript or Groovy.
