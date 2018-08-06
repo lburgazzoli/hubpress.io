@@ -1,4 +1,104 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[.: lb :.]]></title><description><![CDATA[.: lb :.]]></description><link>https://lburgazzoli.github.io</link><image><url>/images/cover-2.jpg</url><title>.: lb :.</title><link>https://lburgazzoli.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Mon, 30 Jul 2018 17:19:24 GMT</lastBuildDate><atom:link href="https://lburgazzoli.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Polyglot Camel Routes]]></title><description><![CDATA[<div id="preamble">
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[.: lb :.]]></title><description><![CDATA[.: lb :.]]></description><link>https://lburgazzoli.github.io</link><image><url>/images/cover-2.jpg</url><title>.: lb :.</title><link>https://lburgazzoli.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Mon, 06 Aug 2018 13:20:06 GMT</lastBuildDate><atom:link href="https://lburgazzoli.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Adventures in GraalVM: invoke Java code from JS in native-image]]></title><description><![CDATA[<div class="paragraph">
+<p>Thre&#8217;s a lot of interest about GraalVM&#8217;s native-image recently so I give it a try but instead of "just" trying to compile some java code to a native binary I went to the edge trying to make the native binary extensible via JavaScript.</p>
+</div>
+<div class="paragraph">
+<p>In a Java application make some java objects available to the JS runtime is trivial and you only need to do something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">try(Context context = Context.create()) {
+    MyBean bean = new MyBean();
+
+    context.getBindings("js").putMember("bean", bean);
+    context.eval("js", "bean.saySomething()")
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>But when a native binary is generated this does not work anymore as GraalVM as of RC5 does not yet support reflective access to Java code from JS (and other languages) so we need to use some proxy object GraalVM SDK provides.</p>
+</div>
+<div class="paragraph">
+<p>The javadoc for the proxy packages is:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>http://www.graalvm.org/sdk/javadoc/org/graalvm/polyglot/proxy/package-summary.html</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>So let&#8217;s write an example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">try(Context ctx = Context.create()) {
+    final Map&lt;String, Object&gt; proxy = new HashMap&lt;&gt;(); <i class="conum" data-value="1"></i><b>(1)</b>
+    proxy.put("sayHello", new ProxyExecutable() { <i class="conum" data-value="2"></i><b>(2)</b>
+        @Override
+        public Object execute(Value... arguments) {
+            if (arguments.length != 1) {
+                throw new IllegalArgumentException();
+            }
+
+            System.out.printf("Hello, %s\n", arguments[0].asString());
+            return null;
+        }
+    });
+
+    ProxyObject bean = ProxyObject.fromMap(proxy); <i class="conum" data-value="3"></i><b>(3)</b>
+    ctx.getBindings("js").putMember("bean", bean); <i class="conum" data-value="4"></i><b>(4)</b>
+
+    ctx.eval("js", "bean.sayHello('World!')"); <i class="conum" data-value="5"></i><b>(5)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Use a map to describe our bean</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Wrap the function we want to invoke using a <code><code>ProxyExecutable</code></code> which mimics a guest language objects that are executable</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Wrap our map using <code><code>ProxyObject</code></code> builtin <code><code>fromMap</code></code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Bind our proxy to a variable named <code><code>bean</code></code> the scripting engine can the access</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Finally Invoke our <code><code>ProxyExecutable</code></code> from JS</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>I&#8217;m unable to have a stable base for going further because of the following issues:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/oracle/graal/issues/594" class="bare">https://github.com/oracle/graal/issues/594</a></p>
+</li>
+<li>
+<p><a href="https://github.com/oracle/graal/issues/592" class="bare">https://github.com/oracle/graal/issues/592</a></p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>]]></description><link>https://lburgazzoli.github.io/2018/08/06/Adventures-in-GraalVM-invoke-Java-code-from-JS-in-native-image.html</link><guid isPermaLink="true">https://lburgazzoli.github.io/2018/08/06/Adventures-in-GraalVM-invoke-Java-code-from-JS-in-native-image.html</guid><category><![CDATA[graalvm]]></category><category><![CDATA[jboss-fuse]]></category><category><![CDATA[scripting]]></category><dc:creator><![CDATA[Luca Burgazzoli]]></dc:creator><pubDate>Mon, 06 Aug 2018 00:00:00 GMT</pubDate></item><item><title><![CDATA[Polyglot Camel Routes]]></title><description><![CDATA[<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>As I do not like XML so much, I spent some time on a very small project to load routes written in JavaScript or Groovy.</p>
@@ -142,59 +242,6 @@
         - classpath:ext/camel/*.js
         - classpath:ext/camel/*.groovy</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_updates_2018_07_30">Updates (2018-07-30)</h3>
-<div class="paragraph">
-<p>I&#8217;ve updated the example to include a binding for JavaScript using GraalJS. As there&#8217;s no equivalent for nashorn&#8217;s <code><code>bindProperties</code></code> extension, a little hack is required:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java"> return new RouteBuilder() {
-    public void configure() throws Exception {
-        try(Context context = Context.create()) {
-
-            // add this builder instance to javascript language
-            // bindings
-            context.getBindings("js").putMember("builder", this);
-
-            // move builder's methods to global scope so builder's
-            // dsl can be invoke directly
-            context.eval(
-                "js",
-                "m = Object.keys(builder)\n" +
-                    "m.forEach((element) =&gt; {\n" +
-                    "    global[element] = builder[element]\n" +
-                    "});"
-            );
-
-            // remove bindings
-            context.getBindings("js").removeMember("builder");
-
-            try (InputStream is = source.getInputStream()) {
-                context.eval(
-                    Source.newBuilder("js", new InputStreamReader(is), "").build()
-                );
-            }
-        }
-    }
-};</code></pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>To user GraalJS it is required to run the project using GraalVM</p>
-</div>
-</td>
-</tr>
-</table>
 </div>
 </div>]]></description><link>https://lburgazzoli.github.io/2018/07/29/Polyglot-Camel-Routes.html</link><guid isPermaLink="true">https://lburgazzoli.github.io/2018/07/29/Polyglot-Camel-Routes.html</guid><category><![CDATA[camel]]></category><dc:creator><![CDATA[Luca Burgazzoli]]></dc:creator><pubDate>Sun, 29 Jul 2018 00:00:00 GMT</pubDate></item><item><title><![CDATA[Apache Camel features spotlight: Cluster Service]]></title><description><![CDATA[<div id="preamble">
 <div class="sectionbody">
