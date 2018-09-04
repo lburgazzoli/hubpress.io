@@ -4,7 +4,7 @@ v1.0, 2018-09-04
 :hp-tags: graalvm, jboss-fuse, scripting, camel
 :icons: font
 
-I've recently been playing with Camel to leverage JavaScript to define routesfootnote:[https://lburgazzoli.github.io/2018/07/29/Polyglot-Camel-Routes.html] and GraalVM to invoke JavaScript from a native imagefootnote:[https://lburgazzoli.github.io/2018/08/06/Adventures-in-GraalVM-invoke-Java-code-from-JS-in-native-image.html] so let's try to make them working togheter!
+I've recently been playing with Camel to leverage JavaScript to define routesfootnote:[https://lburgazzoli.github.io/2018/07/29/Polyglot-Camel-Routes.html] and GraalVM to invoke JavaScript from a native imagefootnote:[https://lburgazzoli.github.io/2018/08/06/Adventures-in-GraalVM-invoke-Java-code-from-JS-in-native-image.html] so let's try to make them working together!
 
 As GraalVM as of RC6 does not (yet) support reflective access from scripting context back to Java world we need to use some proxy object GraalVM SDK provides, something like:
 
