@@ -50,8 +50,8 @@
     <link href="//fonts.googleapis.com/" rel="dns-prefetch">
     <link href="//fonts.googleapis.com/css?family=Noto+Serif:400,700,400italic|Open+Sans:700,400&subset=latin,latin-ext" rel="stylesheet">
 
-    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/main.min.css?v=1536050995680">
-    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/asciidoctor-foundation.css?v=1536050995680"/>
+    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/main.min.css?v=1536051729004">
+    <link rel="stylesheet" href="//lburgazzoli.github.io/themes/ghostium/assets/css/asciidoctor-foundation.css?v=1536051729004"/>
 
     <script type="text/javascript">
       var ga_ua = 'UA-XXXXX-X';
@@ -78,7 +78,7 @@
       GHOSTIUM.enablePjax = typeof enable_pjax !== 'undefined' ? enable_pjax : true;
     </script>
 
-    <script src="//lburgazzoli.github.io/themes/ghostium/assets/js/head-scripts.min.js?v=1536050995680"></script>
+    <script src="//lburgazzoli.github.io/themes/ghostium/assets/js/head-scripts.min.js?v=1536051729004"></script>
 
     <link rel="canonical" href="https://lburgazzoli.github.io/2018/09/04/Adventures-in-GraalVM-polyglot-Camel-routes-with-native-image.html" />
     <meta name="referrer" content="origin" />
@@ -86,7 +86,7 @@
     <meta property="og:site_name" content=".: lb :." />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="Adventures in GraalVM: polyglot Camel routes with native-image" />
-    <meta property="og:description" content="I&amp;#8217;ve recently been playing with Camel to leverage JavaScript to define routes[1] and GraalVM to invoke JavaScript from a native image[2] so let&amp;#8217;s try to make them working togheter! As GraalVM as of RC6 does not (yet) support reflective access from scripting context back" />
+    <meta property="og:description" content="I&amp;#8217;ve recently been playing with Camel to leverage JavaScript to define routes[1] and GraalVM to invoke JavaScript from a native image[2] so let&amp;#8217;s try to make them working together! As GraalVM as of RC6 does not (yet) support reflective access from scripting context back" />
     <meta property="og:url" content="https://lburgazzoli.github.io/2018/09/04/Adventures-in-GraalVM-polyglot-Camel-routes-with-native-image.html" />
     <meta property="article:published_time" content="2018-09-04T00:00:00.000Z" />
     <meta property="article:tag" content="graalvm" />
@@ -96,7 +96,7 @@
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Adventures in GraalVM: polyglot Camel routes with native-image" />
-    <meta name="twitter:description" content="I&amp;#8217;ve recently been playing with Camel to leverage JavaScript to define routes[1] and GraalVM to invoke JavaScript from a native image[2] so let&amp;#8217;s try to make them working togheter! As GraalVM as of RC6 does not (yet) support reflective access from scripting context back" />
+    <meta name="twitter:description" content="I&amp;#8217;ve recently been playing with Camel to leverage JavaScript to define routes[1] and GraalVM to invoke JavaScript from a native image[2] so let&amp;#8217;s try to make them working together! As GraalVM as of RC6 does not (yet) support reflective access from scripting context back" />
     <meta name="twitter:url" content="https://lburgazzoli.github.io/2018/09/04/Adventures-in-GraalVM-polyglot-Camel-routes-with-native-image.html" />
     
     <script type="application/ld+json">
@@ -115,7 +115,7 @@
     "url": "https://lburgazzoli.github.io/2018/09/04/Adventures-in-GraalVM-polyglot-Camel-routes-with-native-image.html",
     "datePublished": "2018-09-04T00:00:00.000Z",
     "keywords": "graalvm, jboss-fuse, scripting, camel",
-    "description": "I&amp;#8217;ve recently been playing with Camel to leverage JavaScript to define routes[1] and GraalVM to invoke JavaScript from a native image[2] so let&amp;#8217;s try to make them working togheter! As GraalVM as of RC6 does not (yet) support reflective access from scripting context back"
+    "description": "I&amp;#8217;ve recently been playing with Camel to leverage JavaScript to define routes[1] and GraalVM to invoke JavaScript from a native image[2] so let&amp;#8217;s try to make them working together! As GraalVM as of RC6 does not (yet) support reflective access from scripting context back"
 }
     </script>
 
@@ -213,7 +213,7 @@
           </aside>
           <div itemprop="articleBody" class="post-body">
             <div class="paragraph">
-<p>I&#8217;ve recently been playing with Camel to leverage JavaScript to define routes<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnote_1" title="View footnote.">1</a>]</sup> and GraalVM to invoke JavaScript from a native image<sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnote_2" title="View footnote.">2</a>]</sup> so let&#8217;s try to make them working togheter!</p>
+<p>I&#8217;ve recently been playing with Camel to leverage JavaScript to define routes<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnote_1" title="View footnote.">1</a>]</sup> and GraalVM to invoke JavaScript from a native image<sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnote_2" title="View footnote.">2</a>]</sup> so let&#8217;s try to make them working together!</p>
 </div>
 <div class="paragraph">
 <p>As GraalVM as of RC6 does not (yet) support reflective access from scripting context back to Java world we need to use some proxy object GraalVM SDK provides, something like:</p>
@@ -407,7 +407,7 @@
         // hljs.initHighlightingOnLoad();
       </script>
 
-    <script src="//lburgazzoli.github.io/themes/ghostium/assets/js/foot-scripts.min.js?v=1536050995680"></script>
+    <script src="//lburgazzoli.github.io/themes/ghostium/assets/js/foot-scripts.min.js?v=1536051729004"></script>
 
   </body>
 </html>
