@@ -1,14 +1,26 @@
-= Camel K Anatomy : an introduction
+= Camel K Anatomy
 :hp-tags: camel, camel-k, cloud
 :published_at: 2019-01-06
 :hp-image: camel-anatomy.jpg
 
-A few months ago a new species of camel has been found and because of its ability to survive to the extreme environmental conditions of modern cloud systems, it has been named *camel-k*.
+A few months ago a new species of camel which has the ability to survive to the extreme environmental conditions of modern cloud systems, has been discovered and named *Camel K*.
 
+=== About
 
-This blog post is an introduction of the main carachteristics of this new animal which I'm gogin to dissect to study its anatomical structure in a series of upcoming blog posts.
+This blog post is an introduction of the main carachteristics of this new creature which I'm gogin to dissect to study its anatomical structure in a series of upcoming blog posts. 
 
+[NOTE]
+====
+For an higher level overview about Camel K I'd recommend the following https://www.nicolaferraro.me[Nicola Ferraro]'s posts: 
 
-image::camel-anatomy.jpg[] 
+* https://www.nicolaferraro.me/2018/10/15/introducing-camel-k/[Introducing Camel K]
+* https://www.nicolaferraro.me/2018/12/10/camel-k-on-knative/[Camel K on Knative]
+====
 
+--
+image::camel-anatomy.jpg[]
+--
 
+* State Machine
+* Trait
+* Runtime
