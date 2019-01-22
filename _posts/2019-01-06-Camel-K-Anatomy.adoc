@@ -9,7 +9,7 @@ A few months ago a new species of camel which has the ability to survive to the 
 
 From a 10000 foot view, we can describe *Camel K* as a cloud native integration platform based on https://camel.apache.org/[Apache Camel] that leverage the power of the https://github.com/operator-framework/operator-sdk[Operator SDK] to run natively on https://kubernetes.io[Kubernetes] or https://www.openshift.com[OpenShift].
 
-This is an introductory of a series of mini-post in which I'm going to dissect *Camel K* to explain its internal structure, for a better overview and information about what to expect next, I'd recommend the following posts by the awesome https://www.nicolaferraro.me[Nicola Ferraro]:
+This is an introductory post of a series of mini-post in which I'm going to dissect *Camel K* to explain its internal structure, for a better overview and information about what to expect next, I'd recommend the following posts by the awesome https://www.nicolaferraro.me[Nicola Ferraro]:
 
 * https://www.nicolaferraro.me/2018/10/15/introducing-camel-k/[Introducing Camel K]
 * https://www.nicolaferraro.me/2018/12/10/camel-k-on-knative/[Camel K on Knative]
@@ -20,11 +20,16 @@ This is an introductory of a series of mini-post in which I'm going to dissect *
 image::../images/CAMEL_base_frecce.jpg[align = "left"]
 --
 
-*Camel K" is 
+*Camel K" has three main component:
 
 * *Operator*
++
+It is the intelligence behind the platform that coordinates all the moving parts, reacts to the inputs and adapt the behavior of the platform according to the environment in which it runs.
+
 * *Traits*
++
+TBD
+
 * *Runtimes*
-
-
-It coordinates all the moving parts that make it possible to create true cloud native integrations.
++
+TBD
