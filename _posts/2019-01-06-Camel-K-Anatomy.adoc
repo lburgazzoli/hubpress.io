@@ -24,11 +24,16 @@ image::../images/CAMEL_base_frecce.jpg[align = "left"]
 
 * *Operator*
 +
-It is the intelligence behind the platform that coordinates all the moving parts, reacts to the inputs and adapt the behavior of the platform according to the environment in which it runs.
+An operators is "traditionally" defined as a method of packaging, deploying and managing a Kubernetes application but in Camel K we have moved this pattern to the next level and the *Camel K Operator* is the intelligence that coordinates all the moving parts
++
+- it adapts the behavior of the platform according to the environment in which it runs
+- it understands the integration code and configure the related Kubernetes resources according
+- it adapts the integrations it runs according to the environment and the integration code
+
 
 * *Traits*
 +
-TBD
+They are what
 
 * *Runtimes*
 +
