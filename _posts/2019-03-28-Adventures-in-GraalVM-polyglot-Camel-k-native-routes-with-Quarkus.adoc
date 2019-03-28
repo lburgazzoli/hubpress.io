@@ -1,0 +1,119 @@
+= Adventures in GraalVM: polyglot Camel (k) native routes with Quarkus
+Luca Burgazzoli
+v1.0, 2019-03-25
+:hp-tags: graalvm, jboss-fuse, scripting, camel
+:icons: font
+
+
+The last blog i wrotesfootnote:[https://lburgazzoli.github.io/2018/09/04/Adventures-in-GraalVM-polyglot-Camel-routes-with-native-image.html] was about running integration code written in JavaScript from a Camel application compiled as native executable using SubstrateVM (part of the GraalVM project).
+
+=== Has something happen since then ?
+
+I would say yes:
+
+- https://github.com/apache/camel-k[Camel K]
+- https://quarkus.io[Quarkus]
+- Camel 3 development has finally started
+
+As I'm involved in all the projects above, let see how they can play togheter to deliver a truly amazing cloud native experience.
+
+CAUTION: this blog is based on code not yet merged in the upstream repository and subject to change
+
+=== Quarkus + Camel K
+
+Quarkus provides some initial bitsfootnote:[https://quarkus.io/extensions/#integration] to let a Camel application run faster through build time optimizations and AOT compilation so let see how we can leverage them in Camel K.
+
+To improve Camel startup-time most of the steps needed to initialize a CamelContext instance are done at build time, as example components, languages and data-formats are discovered and loaded into the registry so at runtime, Camel does not need to spend any time resolving and instantiating the related classes.
+
+As Quarkus supports CDI we can use CDI annotations to obtain a reference to a bean holding optimized Camel bits and to adapt quarked Camel lifecycle events to Camel K lifecycle: 
+
+[source,java]
+----
+@ApplicationScoped
+public class CamelKApplication {
+    @Inject
+    CamelRuntime runtime;
+
+	List<Listener> listeners = new ArrayList<>();
+
+    public void initializing(@Observes InitializingEvent event) {
+        //
+        // Add additional properties to the runtime
+        //
+        runtime.addProperties(RuntimeSupport.loadProperties());
+
+        //
+        // Load listeners from seervice files and configure them
+        //
+        ServiceLoader.load(Runtime.Listener.class).forEach(l -> {
+            if (l instanceof HasId) {
+                String id = ((HasId) l).getId();
+                if (!id.endsWith(".")) {
+                    id = id + ".";
+                }
+
+                RuntimeSupport.bindProperties(getContext(), l, id);
+            }
+
+            listeners.add(l);
+        });
+
+        listeners.forEach(l -> l.accept(Phase.Starting, this));
+        listeners.forEach(l -> l.accept(Phase.ConfigureContext, this));
+        listeners.forEach(l -> l.accept(Phase.ConfigureRoutes, this));
+    }
+
+    public void started(@Observes StartedEvent event) {
+    	listeners.forEach(l -> l.accept(Phase.Started, this));
+    }
+
+    public void stopping(@Observes StoppingEvent event) {
+    	listeners.forEach(l -> l.accept(Phase.Stopping, this));
+    }
+
+    public void stopped(@Observes StoppedEvent event) {
+        listeners.forEach(l -> l.accept(Phase.Stopped, this));
+    }
+}
+----
+
+As we want to be able to run our code as native binary we also need to create a Camel K extension for Quarkusfootnote:[https://quarkus.io/guides/extension-authors-guide] that can instruct it about what it is needed for Camel K to properly build and run with SubstrateVM.
+
+The minimum requirement is to make the services Camel K realies on available when running in native mode:
+
+[source,java]
+----
+public class CamelQuarkusProcessor {
+    @BuildStep
+    void process(
+            BuildProducer<ServiceProviderBuildItem> serviceProvider,
+            CombinedIndexBuildItem combinedIndexBuildItem) {
+
+        IndexView view = combinedIndexBuildItem.getIndex(); // <1>
+        String type = "org.apache.camel.k.Runtime$Listener";
+		DotName type = DotName.createSimple(type);
+        
+        view.getAllKnownImplementors(DotName.createSimple(type)).forEach(i-> {
+            serviceProvider.produce(new ServiceProviderBuildItem(
+                type, 
+                i.name().toString()
+           ));
+        }); // <2>
+    }
+}
+----
+<1> Leverage https://github.com/wildfly/jandex[Jandex] to efficiently discovery implementations 
+<2> Instruct Quarkus about concrete service implementations needed ar runtime
+
+
+
+
+
+
+
+
+
+
+
+
+
