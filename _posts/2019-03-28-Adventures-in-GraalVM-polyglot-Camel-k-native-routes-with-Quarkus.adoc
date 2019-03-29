@@ -62,7 +62,7 @@ public class CamelKApplication {
 
 As we want to be able to run our code as native binary we also need to create a Camel K extension for Quarkusfootnote:[https://quarkus.io/guides/extension-authors-guide] that can instruct it about what it is needed for Camel K to properly build and run with SubstrateVM.
 
-The minimum requirement is to make the services Camel K realies on available when running in native mode:
+The minimum requirement is to make the services Camel K relies on available when running in native mode:
 
 [source,java]
 ----
